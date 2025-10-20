@@ -1,0 +1,2621 @@
+<!DOCTYPE html>
+<!-- saved from url=(0152)https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/75f4332abab4c6868ce86439b9bd249f/e7a785f2-b4ad-484a-8932-53b5b5076935/index.html -->
+<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVservice125 - Административная панель</title>
+    <style>
+        :root {
+          /* Primitive Color Tokens */
+          --color-white: rgba(255, 255, 255, 1);
+          --color-black: rgba(0, 0, 0, 1);
+          --color-cream-50: rgba(252, 252, 249, 1);
+          --color-cream-100: rgba(255, 255, 253, 1);
+          --color-gray-200: rgba(245, 245, 245, 1);
+          --color-gray-300: rgba(167, 169, 169, 1);
+          --color-gray-400: rgba(119, 124, 124, 1);
+          --color-slate-500: rgba(98, 108, 113, 1);
+          --color-brown-600: rgba(94, 82, 64, 1);
+          --color-charcoal-700: rgba(31, 33, 33, 1);
+          --color-charcoal-800: rgba(38, 40, 40, 1);
+          --color-slate-900: rgba(19, 52, 59, 1);
+          --color-teal-300: rgba(50, 184, 198, 1);
+          --color-teal-400: rgba(45, 166, 178, 1);
+          --color-teal-500: rgba(33, 128, 141, 1);
+          --color-teal-600: rgba(29, 116, 128, 1);
+          --color-teal-700: rgba(26, 104, 115, 1);
+          --color-teal-800: rgba(41, 150, 161, 1);
+          --color-red-400: rgba(255, 84, 89, 1);
+          --color-red-500: rgba(192, 21, 47, 1);
+          --color-orange-400: rgba(230, 129, 97, 1);
+          --color-orange-500: rgba(168, 75, 47, 1);
+        
+          /* RGB versions for opacity control */
+          --color-brown-600-rgb: 94, 82, 64;
+          --color-teal-500-rgb: 33, 128, 141;
+          --color-slate-900-rgb: 19, 52, 59;
+          --color-slate-500-rgb: 98, 108, 113;
+          --color-red-500-rgb: 192, 21, 47;
+          --color-red-400-rgb: 255, 84, 89;
+          --color-orange-500-rgb: 168, 75, 47;
+          --color-orange-400-rgb: 230, 129, 97;
+        
+          /* Background color tokens (Light Mode) */
+          --color-bg-1: rgba(59, 130, 246, 0.08);
+          --color-bg-2: rgba(245, 158, 11, 0.08);
+          --color-bg-3: rgba(34, 197, 94, 0.08);
+          --color-bg-4: rgba(239, 68, 68, 0.08);
+          --color-bg-5: rgba(147, 51, 234, 0.08);
+          --color-bg-6: rgba(249, 115, 22, 0.08);
+          --color-bg-7: rgba(236, 72, 153, 0.08);
+          --color-bg-8: rgba(6, 182, 212, 0.08);
+        
+          /* Semantic Color Tokens (Light Mode) */
+          --color-background: var(--color-cream-50);
+          --color-surface: var(--color-cream-100);
+          --color-text: var(--color-slate-900);
+          --color-text-secondary: var(--color-slate-500);
+          --color-primary: var(--color-teal-500);
+          --color-primary-hover: var(--color-teal-600);
+          --color-primary-active: var(--color-teal-700);
+          --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+          --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+          --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+          --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+          --color-btn-primary-text: var(--color-cream-50);
+          --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+          --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+          --color-error: var(--color-red-500);
+          --color-success: var(--color-teal-500);
+          --color-warning: var(--color-orange-500);
+          --color-info: var(--color-slate-500);
+          --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+          --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+        
+          /* Common style patterns */
+          --focus-ring: 0 0 0 3px var(--color-focus-ring);
+          --focus-outline: 2px solid var(--color-primary);
+          --status-bg-opacity: 0.15;
+          --status-border-opacity: 0.25;
+        
+          /* RGB versions for opacity control */
+          --color-success-rgb: 33, 128, 141;
+          --color-error-rgb: 192, 21, 47;
+          --color-warning-rgb: 168, 75, 47;
+          --color-info-rgb: 98, 108, 113;
+        
+          /* Typography */
+          --font-family-base: "Arial", sans-serif;
+          --font-family-mono: "Courier New", monospace;
+          --font-size-xs: 11px;
+          --font-size-sm: 12px;
+          --font-size-base: 14px;
+          --font-size-md: 14px;
+          --font-size-lg: 16px;
+          --font-size-xl: 18px;
+          --font-size-2xl: 20px;
+          --font-size-3xl: 24px;
+          --font-size-4xl: 30px;
+          --font-weight-normal: 400;
+          --font-weight-medium: 500;
+          --font-weight-semibold: 550;
+          --font-weight-bold: 600;
+          --line-height-tight: 1.2;
+          --line-height-normal: 1.5;
+          --letter-spacing-tight: -0.01em;
+        
+          /* Spacing */
+          --space-0: 0;
+          --space-1: 1px;
+          --space-2: 2px;
+          --space-4: 4px;
+          --space-6: 6px;
+          --space-8: 8px;
+          --space-10: 10px;
+          --space-12: 12px;
+          --space-16: 16px;
+          --space-20: 20px;
+          --space-24: 24px;
+          --space-32: 32px;
+        
+          /* Border Radius */
+          --radius-sm: 6px;
+          --radius-base: 8px;
+          --radius-md: 10px;
+          --radius-lg: 12px;
+          --radius-full: 9999px;
+        
+          /* Shadows */
+          --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+          --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+          --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+          --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+          --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+        
+          /* Animation */
+          --duration-fast: 150ms;
+          --duration-normal: 250ms;
+          --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        
+          /* Layout */
+          --container-sm: 640px;
+          --container-md: 768px;
+          --container-lg: 1024px;
+          --container-xl: 1280px;
+        
+          /* Custom app colors */
+          --app-primary: #2563eb;
+          --app-danger: #dc2626;
+          --app-background: #f8fafc;
+          --app-text: #1e293b;
+        }
+        
+        /* Base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            font-size: var(--font-size-base);
+            font-family: var(--font-family-base);
+            line-height: var(--line-height-normal);
+            color: var(--color-text);
+            background-color: var(--app-background);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            margin: 0;
+            font-weight: var(--font-weight-semibold);
+            line-height: var(--line-height-tight);
+            color: var(--color-text);
+            letter-spacing: var(--letter-spacing-tight);
+        }
+        
+        h1 { font-size: var(--font-size-4xl); }
+        h2 { font-size: var(--font-size-3xl); }
+        h3 { font-size: var(--font-size-2xl); }
+        h4 { font-size: var(--font-size-xl); }
+        h5 { font-size: var(--font-size-lg); }
+        h6 { font-size: var(--font-size-md); }
+        
+        /* App specific styles */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--app-primary) 0%, var(--color-teal-600) 100%);
+        }
+        
+        .login-form {
+            background: var(--color-surface);
+            padding: var(--space-32);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 400px;
+            margin: var(--space-16);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--space-32);
+        }
+        
+        .login-header h1 {
+            color: var(--app-primary);
+            margin-bottom: var(--space-8);
+        }
+        
+        .login-header p {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-16);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-8);
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+        }
+        
+        .form-control {
+            display: block;
+            width: 100%;
+            padding: var(--space-12);
+            font-size: var(--font-size-md);
+            line-height: 1.5;
+            color: var(--color-text);
+            background-color: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard);
+        }
+        
+        .form-control:focus {
+            border-color: var(--color-primary);
+            outline: var(--focus-outline);
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+            margin-bottom: var(--space-16);
+        }
+        
+        .form-check input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--app-primary);
+        }
+        
+        .form-check label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            cursor: pointer;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-12) var(--space-20);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--ease-standard);
+            border: none;
+            text-decoration: none;
+            position: relative;
+        }
+        
+        .btn:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+        
+        .btn--primary {
+            background: var(--app-primary);
+            color: var(--color-btn-primary-text);
+        }
+        
+        .btn--primary:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn--secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+        
+        .btn--secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+        
+        .btn--danger {
+            background: var(--app-danger);
+            color: var(--color-white);
+        }
+        
+        .btn--danger:hover {
+            background: #b91c1c;
+        }
+        
+        .btn--full-width {
+            width: 100%;
+        }
+        
+        .btn--sm {
+            padding: var(--space-6) var(--space-12);
+            font-size: var(--font-size-sm);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Main app layout */
+        .app-container {
+            min-height: 100vh;
+            background: var(--app-background);
+        }
+        
+        .app-header {
+            background: var(--color-surface);
+            border-bottom: 1px solid var(--color-border);
+            padding: var(--space-16) var(--space-24);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .app-logo {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--app-primary);
+        }
+        
+        .app-nav {
+            display: flex;
+            gap: var(--space-24);
+        }
+        
+        .nav-item {
+            padding: var(--space-8) var(--space-16);
+            cursor: pointer;
+            border-radius: var(--radius-base);
+            transition: background var(--duration-fast);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+        }
+        
+        .nav-item:hover {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+        
+        .nav-item.active {
+            background: var(--app-primary);
+            color: var(--color-white);
+        }
+        
+        .app-content {
+            padding: var(--space-24);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Calendar styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-24);
+        }
+        
+        .calendar-navigation {
+            display: flex;
+            align-items: center;
+            gap: var(--space-16);
+        }
+        
+        .calendar-month {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            min-width: 200px;
+            text-align: center;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--color-border);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            overflow: hidden;
+        }
+        
+        .calendar-day-header {
+            background: var(--color-secondary);
+            padding: var(--space-12);
+            text-align: center;
+            font-weight: var(--font-weight-semibold);
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+        }
+        
+        .calendar-day {
+            background: var(--color-surface);
+            min-height: 120px;
+            padding: var(--space-8);
+            cursor: pointer;
+            transition: background var(--duration-fast);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .calendar-day:hover {
+            background: var(--color-bg-1);
+        }
+        
+        .calendar-day.other-month {
+            background: var(--color-gray-200);
+            color: var(--color-text-secondary);
+        }
+        
+        .calendar-day.today {
+            background: var(--color-bg-3);
+            font-weight: var(--font-weight-bold);
+        }
+        
+        .day-number {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-4);
+        }
+        
+        .day-appointments {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        
+        .appointment-item {
+            background: var(--app-primary);
+            color: var(--color-white);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+        
+        .appointment-count {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: var(--app-primary);
+            color: var(--color-white);
+            border-radius: var(--radius-full);
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: var(--font-weight-bold);
+        }
+        
+        .floating-btn {
+            position: fixed;
+            bottom: var(--space-24);
+            right: var(--space-24);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--app-primary);
+            color: var(--color-white);
+            border: none;
+            box-shadow: var(--shadow-lg);
+            cursor: pointer;
+            font-size: var(--font-size-2xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform var(--duration-fast);
+        }
+        
+        .floating-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: var(--space-24);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-2xl);
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-base);
+            transition: background var(--duration-fast);
+        }
+        
+        .modal-close:hover {
+            background: var(--color-secondary);
+        }
+        
+        .modal-body {
+            padding: var(--space-24);
+        }
+        
+        .modal-footer {
+            padding: var(--space-24);
+            border-top: 1px solid var(--color-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-12);
+        }
+        
+        /* Form styles */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        /* Table styles */
+        .table-container {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th,
+        .table td {
+            padding: var(--space-12);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .table th {
+            background: var(--color-secondary);
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text);
+            cursor: pointer;
+            transition: background var(--duration-fast);
+        }
+        
+        .table th:hover {
+            background: var(--color-secondary-hover);
+        }
+        
+        .table tbody tr {
+            cursor: pointer;
+            transition: background var(--duration-fast);
+        }
+        
+        .table tbody tr:hover {
+            background: var(--color-bg-1);
+        }
+        
+        /* Search and filter styles */
+        .search-filters {
+            display: flex;
+            gap: var(--space-16);
+            margin-bottom: var(--space-24);
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        /* Contact buttons */
+        .contact-buttons {
+            display: flex;
+            gap: var(--space-8);
+            margin-top: var(--space-16);
+        }
+        
+        .btn-call {
+            background: #22c55e;
+            color: var(--color-white);
+        }
+        
+        .btn-whatsapp {
+            background: #25d366;
+            color: var(--color-white);
+        }
+        
+        .btn-telegram {
+            background: #0088cc;
+            color: var(--color-white);
+        }
+        
+        /* Birthday section */
+        .birthday-section {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-bottom: var(--space-24);
+        }
+        
+        .birthday-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-16);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--space-12);
+        }
+        
+        .birthday-info h4 {
+            margin-bottom: var(--space-4);
+        }
+        
+        .birthday-info p {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin: 0;
+        }
+        
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            top: var(--space-24);
+            right: var(--space-24);
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-16);
+            box-shadow: var(--shadow-lg);
+            z-index: 2000;
+            max-width: 400px;
+            transform: translateX(100%);
+            transition: transform var(--duration-normal);
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            border-color: var(--color-success);
+        }
+        
+        .toast.error {
+            border-color: var(--color-error);
+        }
+        
+        .toast.warning {
+            border-color: var(--color-warning);
+        }
+        
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: var(--space-12);
+        }
+        
+        .toast-icon {
+            font-size: var(--font-size-lg);
+        }
+        
+        .toast-message {
+            flex: 1;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        /* Loading styles */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-32);
+        }
+        
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--color-border);
+            border-top-color: var(--app-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .app-header {
+                flex-direction: column;
+                gap: var(--space-16);
+            }
+            
+            .app-nav {
+                justify-content: center;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .calendar-day {
+                min-height: 80px;
+            }
+            
+            .search-filters {
+                flex-direction: column;
+            }
+        }
+        
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Client type selection */
+        .client-type-selection {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-24);
+        }
+        
+        .client-type-btn {
+            flex: 1;
+        }
+        
+        .client-type-btn.active {
+            background: var(--app-primary);
+            color: var(--color-white);
+        }
+        
+        /* Search results */
+        .search-results {
+            position: relative;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+        
+        .search-result-item {
+            padding: var(--space-12);
+            cursor: pointer;
+            border-bottom: 1px solid var(--color-border);
+            transition: background var(--duration-fast);
+        }
+        
+        .search-result-item:hover {
+            background: var(--color-bg-1);
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-result-name {
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .search-result-details {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+        }
+        
+        /* Statistics styles */
+        .stats-filters {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-16);
+            margin-bottom: var(--space-24);
+            padding: var(--space-20);
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+        }
+        
+        .quick-filters {
+            display: flex;
+            gap: var(--space-8);
+            flex-wrap: wrap;
+        }
+        
+        .date-filters {
+            display: flex;
+            gap: var(--space-12);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .date-filters label {
+            font-weight: var(--font-weight-medium);
+            min-width: 24px;
+        }
+        
+        .date-filters input {
+            width: 150px;
+        }
+        
+        .stats-display {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-24);
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-16);
+        }
+        
+        .stat-card {
+            background: var(--color-surface);
+            padding: var(--space-24);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            border: 1px solid var(--color-border);
+        }
+        
+        .stat-value {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--app-primary);
+            margin-bottom: var(--space-8);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .stats-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-24);
+        }
+        
+        .stats-section {
+            background: var(--color-surface);
+            padding: var(--space-24);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+        }
+        
+        .stats-section h3 {
+            margin-bottom: var(--space-16);
+        }
+        
+        .top-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-12);
+        }
+        
+        .top-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-12);
+            background: var(--color-bg-1);
+            border-radius: var(--radius-base);
+        }
+        
+        .top-item-rank {
+            font-weight: var(--font-weight-bold);
+            color: var(--app-primary);
+            min-width: 24px;
+        }
+        
+        .top-item-name {
+            flex: 1;
+            margin-left: var(--space-12);
+        }
+        
+        .top-item-value {
+            font-weight: var(--font-weight-medium);
+            color: var(--color-text-secondary);
+        }
+        
+        .stats-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--space-24);
+        }
+        
+        /* Form field states */
+        .form-control:disabled {
+            background-color: var(--color-gray-200);
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-filters {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .date-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .date-filters input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-form">
+            <div class="login-header">
+                <h1>SVservice125</h1>
+                <p>Административная панель</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">Логин</label>
+                    <input type="text" id="username" class="form-control" required="">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Пароль</label>
+                    <input type="password" id="password" class="form-control" required="">
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Запомнить меня</label>
+                </div>
+                <button type="submit" class="btn btn--primary btn--full-width">Войти</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="appScreen" class="app-container hidden">
+        <header class="app-header">
+            <div class="app-logo">SVservice125</div>
+            <nav class="app-nav">
+                <div class="nav-item active" data-section="calendar">📅 Календарь</div>
+                <div class="nav-item" data-section="clients">👥 База клиентов</div>
+                <div class="nav-item" data-section="birthdays">🎉 Дни рождения</div>
+                <div class="nav-item" data-section="statistics">📊 Статистика</div>
+            </nav>
+            <button id="logoutBtn" class="btn btn--secondary btn--sm">Выход</button>
+        </header>
+
+        <main class="app-content">
+            <!-- Calendar Section -->
+            <div id="calendarSection" class="section">
+                <div class="calendar-header">
+                    <div class="calendar-navigation">
+                        <button id="prevMonth" class="btn btn--secondary">‹</button>
+                        <div id="currentMonth" class="calendar-month">Октябрь 2025</div>
+                        <button id="nextMonth" class="btn btn--secondary">›</button>
+                    </div>
+                    <button id="addAppointmentBtn" class="btn btn--primary">+ Добавить запись</button>
+                </div>
+                <div id="calendarGrid" class="calendar-grid"><div class="calendar-day-header">Пн</div><div class="calendar-day-header">Вт</div><div class="calendar-day-header">Ср</div><div class="calendar-day-header">Чт</div><div class="calendar-day-header">Пт</div><div class="calendar-day-header">Сб</div><div class="calendar-day-header">Вс</div><div class="calendar-day other-month"><div class="day-number">29</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">30</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">1</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">2</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">3</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">4</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">5</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">6</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">7</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">8</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">9</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">10</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">11</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">12</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">13</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">14</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">15</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">16</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">17</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">18</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">19</div><div class="day-appointments"></div></div><div class="calendar-day today"><div class="day-number">20</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">21</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">22</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">23</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">24</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">25</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">26</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">27</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">28</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">29</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">30</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">31</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">1</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">2</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">3</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">4</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">5</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">6</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">7</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">8</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">9</div><div class="day-appointments"></div></div></div>
+                <button class="floating-btn" id="floatingAddBtn" title="Добавить запись">+</button>
+            </div>
+
+            <!-- Clients Section -->
+            <div id="clientsSection" class="section hidden">
+                <div class="search-filters">
+                    <input type="text" id="searchInput" class="form-control search-input" placeholder="Поиск по ФИО, телефону...">
+                    <input type="date" id="dateFromFilter" class="form-control">
+                    <input type="date" id="dateToFilter" class="form-control">
+                    <select id="carBrandFilter" class="form-control">
+                        <option value="">Все марки</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th data-sort="fio">ФИО</th>
+                                <th data-sort="phone">Телефон</th>
+                                <th data-sort="car_brand">Марка авто</th>
+                                <th data-sort="car_number">Номер авто</th>
+                                <th data-sort="visit_datetime">Последний визит</th>
+                                <th data-sort="total_visits">Визитов</th>
+                                <th data-sort="total_sum">Общая сумма</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientsTableBody">
+                            <!-- Client rows will be generated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="pagination" class="pagination"></div>
+            </div>
+
+            <!-- Statistics Section -->
+            <div id="statisticsSection" class="section hidden">
+                <h2>Статистика доходов</h2>
+                
+                <!-- Period Selection -->
+                <div class="stats-filters">
+                    <div class="quick-filters">
+                        <button class="btn btn--secondary btn--sm" data-period="today">Сегодня</button>
+                        <button class="btn btn--secondary btn--sm" data-period="yesterday">Вчера</button>
+                        <button class="btn btn--secondary btn--sm" data-period="this_week">Эта неделя</button>
+                        <button class="btn btn--secondary btn--sm" data-period="this_month">Этот месяц</button>
+                        <button class="btn btn--secondary btn--sm" data-period="last_month">Прошлый месяц</button>
+                        <button class="btn btn--secondary btn--sm" data-period="this_year">Этот год</button>
+                        <button class="btn btn--secondary btn--sm" data-period="all_time">Весь период</button>
+                    </div>
+                    <div class="date-filters">
+                        <label>С:</label>
+                        <input type="date" id="statsDateFrom" class="form-control">
+                        <label>По:</label>
+                        <input type="date" id="statsDateTo" class="form-control">
+                        <button class="btn btn--primary btn--sm" id="applyDateFilter">Показать</button>
+                    </div>
+                </div>
+                
+                <!-- Statistics Display -->
+                <div class="stats-display">
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalIncome">0 ₽</div>
+                            <div class="stat-label">Доход за период</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalOrders">0</div>
+                            <div class="stat-label">Выполнено заказов</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="averageCheck">0 ₽</div>
+                            <div class="stat-label">Средний чек</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-details">
+                        <!-- Daily breakdown -->
+                        <div class="stats-section">
+                            <h3>Разбивка по дням</h3>
+                            <div class="table-container">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Дата</th>
+                                            <th>Заказов</th>
+                                            <th>Сумма</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dailyStatsTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Top clients -->
+                        <div class="stats-section">
+                            <h3>ТОП-5 клиентов по сумме</h3>
+                            <div id="topClients" class="top-list"></div>
+                        </div>
+                        
+                        <!-- Top services -->
+                        <div class="stats-section">
+                            <h3>ТОП-5 популярных услуг</h3>
+                            <div id="topServices" class="top-list"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-actions">
+                        <button class="btn btn--primary" id="exportStatsBtn">📥 Экспорт в CSV</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Birthdays Section -->
+            <div id="birthdaysSection" class="section hidden">
+                <h2>Дни рождения клиентов</h2>
+                <div id="todayBirthdays" class="birthday-section">
+                    <h3>Сегодня</h3>
+                    <div id="todayBirthdaysList">
+                        <!-- Today's birthdays will be shown here -->
+                    </div>
+                </div>
+                <div id="upcomingBirthdays" class="birthday-section">
+                    <h3>Ближайшие 7 дней</h3>
+                    <div id="upcomingBirthdaysList">
+                        <!-- Upcoming birthdays will be shown here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Appointment Form Modal -->
+    <div id="appointmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="appointmentModalTitle">Добавить запись</h3>
+                <button class="modal-close" type="button">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Client Type Selection -->
+                <div class="client-type-selection">
+                    <button type="button" class="btn btn--secondary client-type-btn active" data-type="new">Новый клиент</button>
+                    <button type="button" class="btn btn--secondary client-type-btn" data-type="existing">Существующий клиент</button>
+                </div>
+                
+                <!-- Existing Client Search -->
+                <div id="existingClientSearch" class="form-group hidden">
+                    <label class="form-label" for="clientSearch">Поиск клиента</label>
+                    <input type="text" id="clientSearch" class="form-control" placeholder="Введите ФИО для поиска...">
+                    <div id="clientSearchResults" class="search-results"></div>
+                </div>
+                
+                <form id="appointmentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="clientFio">ФИО клиента *</label>
+                            <input type="text" id="clientFio" class="form-control" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="clientPhone">Номер телефона *</label>
+                            <input type="tel" id="clientPhone" class="form-control" placeholder="+79991234567" required="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="clientBirthdate">Дата рождения *</label>
+                            <input type="date" id="clientBirthdate" class="form-control" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="carBrand">Марка автомобиля *</label>
+                            <input type="text" id="carBrand" class="form-control" required="">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="carNumber">Номер автомобиля *</label>
+                            <input type="text" id="carNumber" class="form-control" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="mileage">Пробег *</label>
+                            <input type="number" id="mileage" class="form-control" required="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="vin">VIN номер *</label>
+                        <input type="text" id="vin" class="form-control" required="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="serviceDescription">Описание работы/услуги *</label>
+                        <textarea id="serviceDescription" class="form-control" required=""></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="orderSum">Сумма заказа *</label>
+                            <input type="number" id="orderSum" class="form-control" required="">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="visitDate">Дата визита *</label>
+                            <input type="date" id="visitDate" class="form-control" required="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="visitTime">Время визита *</label>
+                        <select id="visitTime" class="form-control" required="">
+                            <option value="">Выберите время</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" data-modal-close="">Отмена</button>
+                <button type="button" id="editClientDataBtn" class="btn btn--secondary hidden">Изменить данные клиента</button>
+                <button type="submit" form="appointmentForm" class="btn btn--primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Details Modal -->
+    <div id="appointmentDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Детали записи</h3>
+                <button class="modal-close" type="button">×</button>
+            </div>
+            <div class="modal-body" id="appointmentDetailsBody">
+                <!-- Details will be populated here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" data-modal-close="">Закрыть</button>
+                <button type="button" id="editAppointmentBtn" class="btn btn--primary">Редактировать</button>
+                <button type="button" id="deleteAppointmentBtn" class="btn btn--danger">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conflict Modal -->
+    <div id="conflictModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Конфликт времени</h3>
+                <button class="modal-close" type="button">×</button>
+            </div>
+            <div class="modal-body" id="conflictMessage">
+                <!-- Conflict message will be shown here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" data-modal-close="">Нет, выбрать другое время</button>
+                <button type="button" id="forceAddBtn" class="btn btn--primary">Да, добавить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let isAuthenticated = false;
+        let currentUser = null;
+        let clients = [];
+        let admins = [];
+        let currentDate = new Date();
+        let selectedDate = null;
+        let editingAppointment = null;
+        let currentSection = 'calendar';
+        let sortColumn = null;
+        let sortDirection = 'asc';
+        let currentPage = 1;
+        let itemsPerPage = 50;
+        let clientType = 'new';
+        let selectedClientData = null;
+        let clientSearchTimeout = null;
+        let statsDateRange = { from: null, to: null };
+
+        // Apps Script configuration
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-rTbqJ69xQoznTTnWuKOukv2u7RtJ_V9_SS7ubIdNBHfJfqfTaxSrTz0rlbN5xMuv_w/exec';
+        const SPREADSHEET_ID = '1divp7XM6GxUyrxHquaXV18kB0k-e-9Qb_bPD850StKQ';
+
+        // Time slots for appointments
+        const timeSlots = [
+            '00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30',
+            '04:00', '04:30', '05:00', '05:30', '06:00', '06:30', '07:00', '07:30',
+            '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+            '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
+            '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
+            '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'
+        ];
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        async function initializeApp() {
+            // Check if user should be remembered
+            const remembered = getStoredValue('remembered');
+            if (remembered) {
+                try {
+                    await loadData();
+                    showMainApp();
+                } catch (error) {
+                    console.error('Failed to auto-login:', error);
+                    showLoginScreen();
+                }
+            } else {
+                showLoginScreen();
+            }
+
+            setupEventListeners();
+            populateTimeSlots();
+        }
+
+        function setupEventListeners() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    switchSection(e.target.dataset.section);
+                });
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+            // Calendar navigation
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            });
+
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
+
+            // Add appointment buttons
+            document.getElementById('addAppointmentBtn').addEventListener('click', showAppointmentModal);
+            document.getElementById('floatingAddBtn').addEventListener('click', showAppointmentModal);
+
+            // Modal close buttons
+            document.querySelectorAll('.modal-close, [data-modal-close]').forEach(btn => {
+                btn.addEventListener('click', closeModals);
+            });
+
+            // Click outside modal to close
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModals();
+                    }
+                });
+            });
+
+            // Appointment form
+            document.getElementById('appointmentForm').addEventListener('submit', handleAppointmentSubmit);
+
+            // Phone validation
+            document.getElementById('clientPhone').addEventListener('input', formatPhoneNumber);
+
+            // Visit date change
+            document.getElementById('visitDate').addEventListener('change', updateTimeSlots);
+
+            // Search and filters
+            document.getElementById('searchInput').addEventListener('input', filterClients);
+            document.getElementById('dateFromFilter').addEventListener('change', filterClients);
+            document.getElementById('dateToFilter').addEventListener('change', filterClients);
+            document.getElementById('carBrandFilter').addEventListener('change', filterClients);
+
+            // Table sorting
+            document.querySelectorAll('[data-sort]').forEach(th => {
+                th.addEventListener('click', (e) => {
+                    sortTable(e.target.dataset.sort);
+                });
+            });
+
+            // Edit and delete buttons
+            document.getElementById('editAppointmentBtn').addEventListener('click', editAppointment);
+            document.getElementById('deleteAppointmentBtn').addEventListener('click', deleteAppointment);
+
+            // Force add button
+            document.getElementById('forceAddBtn').addEventListener('click', forceAddAppointment);
+            
+            // Client type selection
+            document.querySelectorAll('.client-type-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    switchClientType(e.target.dataset.type);
+                });
+            });
+            
+            // Client search
+            document.getElementById('clientSearch').addEventListener('input', handleClientSearch);
+            
+            // Edit client data button
+            document.getElementById('editClientDataBtn').addEventListener('click', enableClientDataEdit);
+            
+            // Statistics filters
+            document.querySelectorAll('[data-period]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    applyQuickFilter(e.target.dataset.period);
+                });
+            });
+            
+            document.getElementById('applyDateFilter').addEventListener('click', applyCustomDateFilter);
+            document.getElementById('exportStatsBtn').addEventListener('click', exportStatistics);
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const remember = document.getElementById('remember').checked;
+
+            console.log('🔐 [DEBUG] Login attempt:', { username, password: '***' });
+
+            try {
+                showLoading();
+                await loadAdmins();
+                
+                console.log('🔐 [DEBUG] Available admins for comparison:', admins.map(a => ({ login: a.login, password: '***' })));
+                console.log('🔐 [DEBUG] User input:', { username, password: '***' });
+                
+                // Strict comparison with trimmed values
+                const admin = admins.find(a => {
+                    const loginMatch = a.login === username;
+                    const passwordMatch = a.password === password;
+                    console.log(`🔐 [DEBUG] Checking admin '${a.login}': login=${loginMatch}, password=${passwordMatch}`);
+                    return loginMatch && passwordMatch;
+                });
+                
+                console.log('🔐 [DEBUG] Authentication result:', admin ? 'SUCCESS' : 'FAILED');
+                
+                if (admin) {
+                    isAuthenticated = true;
+                    currentUser = admin;
+                    
+                    if (remember) {
+                        storeValue('remembered', true);
+                    }
+                    
+                    await loadClients();
+                    showMainApp();
+                    showToast('Вход выполнен успешно', 'success');
+                } else {
+                    console.log('❌ [DEBUG] No matching admin found');
+                    showToast('Неверный логин или пароль', 'error');
+                }
+            } catch (error) {
+                console.error('❌ [DEBUG] Login error:', error);
+                showToast('Ошибка при входе в систему', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function handleLogout() {
+            isAuthenticated = false;
+            currentUser = null;
+            removeStoredValue('remembered');
+            showLoginScreen();
+            showToast('Вы вышли из системы', 'success');
+        }
+
+        async function loadData() {
+            await loadAdmins();
+            await loadClients();
+        }
+
+        async function loadAdmins() {
+            try {
+                console.log('🔍 [DEBUG] Attempting to load admins from Google Sheets...');
+                
+                // First try direct Google Sheets API
+                const sheetsUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Admins?alt=json`;
+                console.log('🔍 [DEBUG] Trying Google Sheets API:', sheetsUrl);
+                
+                const response = await fetch(sheetsUrl);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('🔍 [DEBUG] Google Sheets API response:', data);
+                    
+                    if (data.values && data.values.length > 1) {
+                        // data.values[0] = headers, data.values[1] and onwards = data
+                        const headers = data.values[0];
+                        console.log('🔍 [DEBUG] Headers:', headers);
+                        
+                        admins = [];
+                        for (let i = 1; i < data.values.length; i++) {
+                            const row = data.values[i];
+                            if (row && row.length >= 2) {
+                                const admin = {
+                                    login: (row[0] || '').toString().trim(),
+                                    password: (row[1] || '').toString().trim()
+                                };
+                                if (admin.login && admin.password) {
+                                    admins.push(admin);
+                                }
+                            }
+                        }
+                        console.log('🔍 [DEBUG] Parsed admins:', admins.map(a => ({ login: a.login, password: '***' })));
+                        
+                        if (admins.length > 0) {
+                            console.log('✅ [DEBUG] Successfully loaded admins from Google Sheets');
+                            return;
+                        }
+                    }
+                }
+                
+                // Fallback: try Apps Script
+                console.log('⚠️ [DEBUG] Google Sheets API failed, trying Apps Script...');
+                const appsScriptResponse = await fetch(`${APPS_SCRIPT_URL}?action=getAdmins`);
+                
+                if (appsScriptResponse.ok) {
+                    const appsScriptData = await appsScriptResponse.json();
+                    console.log('🔍 [DEBUG] Apps Script response:', appsScriptData);
+                    
+                    if (appsScriptData.admins && appsScriptData.admins.length > 0) {
+                        admins = appsScriptData.admins.map(admin => ({
+                            login: (admin.login || '').toString().trim(),
+                            password: (admin.password || '').toString().trim()
+                        }));
+                        console.log('✅ [DEBUG] Successfully loaded admins from Apps Script');
+                        return;
+                    }
+                }
+                
+                throw new Error('Failed to load from both sources');
+                
+            } catch (error) {
+                console.error('❌ [DEBUG] Error loading admins:', error);
+                
+                // Ultimate fallback: hardcoded admin
+                console.log('🔧 [DEBUG] Using fallback authentication: admin/admin123');
+                admins = [
+                    {
+                        login: 'admin',
+                        password: 'admin123'
+                    }
+                ];
+                
+                // Show notification about local auth
+                showToast('Используется локальная авторизация', 'warning');
+            }
+        }
+
+        async function loadClients() {
+            try {
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=getClients`);
+                if (!response.ok) throw new Error('Failed to fetch clients');
+                
+                const data = await response.json();
+                clients = (data.clients || []).filter(client => client.fio); // Filter out empty rows
+                
+                renderCalendar();
+                renderClientsTable();
+                renderBirthdays();
+                populateCarBrandFilter();
+            } catch (error) {
+                console.error('Error loading clients:', error);
+                throw error;
+            }
+        }
+
+        function showLoginScreen() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('appScreen').classList.add('hidden');
+        }
+
+        function showMainApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appScreen').classList.remove('hidden');
+            switchSection(currentSection);
+        }
+
+        function switchSection(section) {
+            currentSection = section;
+            
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-section="${section}"]`).classList.add('active');
+            
+            // Show/hide sections
+            document.querySelectorAll('.section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            document.getElementById(`${section}Section`).classList.remove('hidden');
+            
+            // Section-specific actions
+            if (section === 'calendar') {
+                renderCalendar();
+            } else if (section === 'clients') {
+                renderClientsTable();
+            } else if (section === 'birthdays') {
+                renderBirthdays();
+            } else if (section === 'statistics') {
+                renderStatistics();
+            }
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const monthElement = document.getElementById('currentMonth');
+            
+            // Update month display
+            const monthNames = [
+                'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+            ];
+            monthElement.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            
+            // Clear grid
+            grid.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+            
+            // Calculate calendar dates
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startDate = new Date(firstDay);
+            
+            // Adjust to Monday start
+            const dayOfWeek = (firstDay.getDay() + 6) % 7;
+            startDate.setDate(startDate.getDate() - dayOfWeek);
+            
+            // Generate calendar days
+            const today = new Date();
+            const currentMonth = month;
+            
+            for (let i = 0; i < 42; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                if (date.getMonth() !== currentMonth) {
+                    dayElement.classList.add('other-month');
+                }
+                
+                if (isSameDay(date, today)) {
+                    dayElement.classList.add('today');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = date.getDate();
+                dayElement.appendChild(dayNumber);
+                
+                // Add appointments for this day
+                const dayAppointments = getAppointmentsForDate(date);
+                const appointmentsContainer = document.createElement('div');
+                appointmentsContainer.className = 'day-appointments';
+                
+                dayAppointments.slice(0, 3).forEach(appointment => {
+                    const appointmentElement = document.createElement('div');
+                    appointmentElement.className = 'appointment-item';
+                    appointmentElement.textContent = `${appointment.time} ${appointment.fio}`;
+                    appointmentElement.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showAppointmentDetails(appointment);
+                    });
+                    appointmentsContainer.appendChild(appointmentElement);
+                });
+                
+                if (dayAppointments.length > 3) {
+                    const countElement = document.createElement('div');
+                    countElement.className = 'appointment-count';
+                    countElement.textContent = dayAppointments.length;
+                    dayElement.appendChild(countElement);
+                }
+                
+                dayElement.appendChild(appointmentsContainer);
+                
+                dayElement.addEventListener('click', () => {
+                    selectedDate = new Date(date);
+                    showAppointmentModal();
+                });
+                
+                grid.appendChild(dayElement);
+            }
+        }
+
+        function getAppointmentsForDate(date) {
+            const dateStr = formatDateForComparison(date);
+            return clients.filter(client => {
+                const visitDate = new Date(client.visit_datetime);
+                return formatDateForComparison(visitDate) === dateStr;
+            }).map(client => {
+                const visitTime = new Date(client.visit_datetime);
+                return {
+                    ...client,
+                    time: formatTime(visitTime)
+                };
+            }).sort((a, b) => a.time.localeCompare(b.time));
+        }
+
+        function showAppointmentModal(appointment = null) {
+            editingAppointment = appointment;
+            const modal = document.getElementById('appointmentModal');
+            const title = document.getElementById('appointmentModalTitle');
+            const form = document.getElementById('appointmentForm');
+            
+            // Reset form state
+            clientType = 'new';
+            selectedClientData = null;
+            
+            if (appointment) {
+                title.textContent = 'Редактировать запись';
+                fillAppointmentForm(appointment);
+            } else {
+                title.textContent = 'Добавить запись';
+                form.reset();
+                if (selectedDate) {
+                    document.getElementById('visitDate').value = formatDateForInput(selectedDate);
+                }
+            }
+            
+            switchClientType('new');
+            updateTimeSlots();
+            modal.classList.add('show');
+        }
+
+        function fillAppointmentForm(appointment) {
+            document.getElementById('clientFio').value = appointment.fio || '';
+            document.getElementById('clientPhone').value = appointment.phone || '';
+            document.getElementById('clientBirthdate').value = formatBirthdateForInput(appointment.birthdate) || '';
+            document.getElementById('carBrand').value = appointment.car_brand || '';
+            document.getElementById('carNumber').value = appointment.car_number || '';
+            document.getElementById('mileage').value = appointment.mileage || '';
+            document.getElementById('vin').value = appointment.vin || '';
+            document.getElementById('serviceDescription').value = appointment.service_description || '';
+            document.getElementById('orderSum').value = appointment.order_sum || '';
+            
+            if (appointment.visit_datetime) {
+                const visitDate = new Date(appointment.visit_datetime);
+                document.getElementById('visitDate').value = formatDateForInput(visitDate);
+                document.getElementById('visitTime').value = formatTime(visitDate);
+            }
+        }
+
+        function updateTimeSlots() {
+            const visitDate = document.getElementById('visitDate').value;
+            const timeSelect = document.getElementById('visitTime');
+            const currentTime = timeSelect.value;
+            
+            // Clear and repopulate time slots
+            timeSelect.innerHTML = '<option value="">Выберите время</option>';
+            
+            timeSlots.forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                
+                // Check if this time slot is occupied
+                if (visitDate && isTimeSlotOccupied(visitDate, time)) {
+                    option.textContent += ' (занято)';
+                    option.style.color = '#dc2626';
+                }
+                
+                timeSelect.appendChild(option);
+            });
+            
+            // Restore selected time if it was set
+            if (currentTime) {
+                timeSelect.value = currentTime;
+            }
+        }
+
+        function isTimeSlotOccupied(date, time) {
+            const dateTimeStr = `${date}T${time}:00`;
+            return clients.some(client => {
+                if (editingAppointment && client.id === editingAppointment.id) {
+                    return false; // Don't count the currently editing appointment
+                }
+                const visitDateTime = new Date(client.visit_datetime);
+                const checkDateTime = new Date(dateTimeStr);
+                return Math.abs(visitDateTime - checkDateTime) < 60000; // Within 1 minute
+            });
+        }
+
+        function checkTimeConflict(date, time) {
+            if (!isTimeSlotOccupied(date, time)) {
+                return null;
+            }
+            
+            const conflictingClient = clients.find(client => {
+                if (editingAppointment && client.id === editingAppointment.id) {
+                    return false;
+                }
+                const visitDateTime = new Date(client.visit_datetime);
+                const checkDateTime = new Date(`${date}T${time}:00`);
+                return Math.abs(visitDateTime - checkDateTime) < 60000;
+            });
+            
+            return conflictingClient;
+        }
+
+        async function handleAppointmentSubmit(e) {
+            e.preventDefault();
+            
+            const formData = getAppointmentFormData();
+            
+            // Validate form
+            if (!validateAppointmentForm(formData)) {
+                return;
+            }
+            
+            // Check for time conflicts
+            const conflictingClient = checkTimeConflict(formData.visitDate, formData.visitTime);
+            if (conflictingClient) {
+                showTimeConflictModal(conflictingClient, formData);
+                return;
+            }
+            
+            await saveAppointment(formData);
+        }
+
+        function getAppointmentFormData() {
+            return {
+                fio: document.getElementById('clientFio').value.trim(),
+                phone: document.getElementById('clientPhone').value.trim(),
+                birthdate: document.getElementById('clientBirthdate').value,
+                car_brand: document.getElementById('carBrand').value.trim(),
+                car_number: document.getElementById('carNumber').value.trim(),
+                mileage: document.getElementById('mileage').value,
+                vin: document.getElementById('vin').value.trim(),
+                service_description: document.getElementById('serviceDescription').value.trim(),
+                order_sum: document.getElementById('orderSum').value,
+                visitDate: document.getElementById('visitDate').value,
+                visitTime: document.getElementById('visitTime').value
+            };
+        }
+
+        function validateAppointmentForm(data) {
+            // Basic validation
+            const requiredFields = ['fio', 'phone', 'birthdate', 'car_brand', 'car_number', 'mileage', 'vin', 'service_description', 'order_sum', 'visitDate', 'visitTime'];
+            
+            for (const field of requiredFields) {
+                if (!data[field]) {
+                    showToast('Заполните все обязательные поля', 'error');
+                    return false;
+                }
+            }
+            
+            // Phone validation
+            const phoneRegex = /^\+7\d{10}$/;
+            if (!phoneRegex.test(data.phone)) {
+                showToast('Номер телефона должен быть в формате +7XXXXXXXXXX', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function showTimeConflictModal(conflictingClient, formData) {
+            const modal = document.getElementById('conflictModal');
+            const message = document.getElementById('conflictMessage');
+            
+            const visitDateTime = `${formData.visitDate} ${formData.visitTime}`;
+            message.innerHTML = `
+                <p>В выбранный слот <strong>${formatDateTime(visitDateTime)}</strong> уже записан клиент:</p>
+                <p><strong>${conflictingClient.fio}</strong></p>
+                <p>Вы точно хотите добавить ещё одного?</p>
+            `;
+            
+            // Store form data for potential force add
+            modal.dataset.formData = JSON.stringify(formData);
+            
+            modal.classList.add('show');
+        }
+
+        async function forceAddAppointment() {
+            const modal = document.getElementById('conflictModal');
+            const formData = JSON.parse(modal.dataset.formData);
+            
+            closeModals();
+            await saveAppointment(formData);
+        }
+
+        async function saveAppointment(data) {
+            try {
+                showLoading();
+                
+                const visitDateTime = new Date(`${data.visitDate}T${data.visitTime}:00`);
+                const now = new Date();
+                
+                const appointment = {
+                    id: editingAppointment ? editingAppointment.id : generateId(),
+                    fio: data.fio,
+                    phone: data.phone,
+                    birthdate: formatBirthdateForStorage(data.birthdate),
+                    car_brand: data.car_brand,
+                    car_number: data.car_number,
+                    mileage: data.mileage,
+                    vin: data.vin,
+                    service_description: data.service_description,
+                    order_sum: data.order_sum,
+                    visit_datetime: visitDateTime.toISOString(),
+                    created_at: editingAppointment ? editingAppointment.created_at : now.toISOString()
+                };
+                
+                // Save to Apps Script
+                const saveData = {
+                    action: editingAppointment ? 'updateClient' : 'addClient',
+                    client: appointment
+                };
+                
+                const saveResponse = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(saveData)
+                });
+                
+                if (!saveResponse.ok) {
+                    throw new Error('Failed to save appointment');
+                }
+                
+                const saveResult = await saveResponse.json();
+                if (!saveResult.success) {
+                    throw new Error(saveResult.error || 'Failed to save appointment');
+                }
+                
+                // Update local data
+                if (editingAppointment) {
+                    const index = clients.findIndex(c => c.id === editingAppointment.id);
+                    if (index !== -1) {
+                        clients[index] = appointment;
+                    }
+                } else {
+                    clients.push(appointment);
+                }
+                
+                closeModals();
+                renderCalendar();
+                renderClientsTable();
+                renderBirthdays();
+                populateCarBrandFilter();
+                
+                // Update statistics if on stats page
+                if (currentSection === 'statistics') {
+                    renderStatistics();
+                }
+                
+                const action = editingAppointment ? 'обновлена' : 'добавлена';
+                showToast(`Запись ${action} успешно`, 'success');
+                
+                editingAppointment = null;
+            } catch (error) {
+                console.error('Error saving appointment:', error);
+                showToast('Ошибка при сохранении записи', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showAppointmentDetails(appointment) {
+            const modal = document.getElementById('appointmentDetailsModal');
+            const title = modal.querySelector('.modal-title');
+            const body = document.getElementById('appointmentDetailsBody');
+            
+            title.textContent = 'Детали записи';
+            
+            const visitDate = new Date(appointment.visit_datetime);
+            
+            body.innerHTML = `
+                <div class="form-group">
+                    <strong>ФИО клиента:</strong> ${appointment.fio}
+                </div>
+                <div class="form-group">
+                    <strong>Телефон:</strong> ${appointment.phone}
+                    <div class="contact-buttons">
+                        <a href="tel:${appointment.phone}" class="btn btn--sm btn-call">📞 Позвонить</a>
+                        <a href="https://wa.me/${appointment.phone}" target="_blank" class="btn btn--sm btn-whatsapp">💬 WhatsApp</a>
+                        <a href="https://t.me/${appointment.phone}" target="_blank" class="btn btn--sm btn-telegram">✈️ Telegram</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <strong>Дата рождения:</strong> ${appointment.birthdate}
+                </div>
+                <div class="form-group">
+                    <strong>Марка автомобиля:</strong> ${appointment.car_brand}
+                </div>
+                <div class="form-group">
+                    <strong>Номер автомобиля:</strong> ${appointment.car_number}
+                </div>
+                <div class="form-group">
+                    <strong>Пробег:</strong> ${appointment.mileage} км
+                </div>
+                <div class="form-group">
+                    <strong>VIN:</strong> ${appointment.vin}
+                </div>
+                <div class="form-group">
+                    <strong>Описание работы:</strong><br>${appointment.service_description}
+                </div>
+                <div class="form-group">
+                    <strong>Сумма заказа:</strong> ${appointment.order_sum} ₽
+                </div>
+                <div class="form-group">
+                    <strong>Дата и время визита:</strong> ${formatDateTime(visitDate)}
+                </div>
+            `;
+            
+            // Store appointment reference for edit/delete
+            modal.dataset.appointmentId = appointment.id;
+            
+            // Show edit/delete buttons for individual appointments
+            document.getElementById('editAppointmentBtn').style.display = '';
+            document.getElementById('deleteAppointmentBtn').style.display = '';
+            
+            modal.classList.add('show');
+        }
+
+        function editAppointment() {
+            const modal = document.getElementById('appointmentDetailsModal');
+            const appointmentId = modal.dataset.appointmentId;
+            const appointment = clients.find(c => c.id === appointmentId);
+            
+            if (appointment) {
+                closeModals();
+                showAppointmentModal(appointment);
+            }
+        }
+
+        async function deleteAppointment() {
+            if (!confirm('Вы уверены, что хотите удалить эту запись?')) {
+                return;
+            }
+            
+            try {
+                showLoading();
+                const modal = document.getElementById('appointmentDetailsModal');
+                const appointmentId = modal.dataset.appointmentId;
+                
+                // Delete from Apps Script
+                const deleteData = {
+                    action: 'deleteClient',
+                    clientId: appointmentId
+                };
+                
+                const deleteResponse = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(deleteData)
+                });
+                
+                if (!deleteResponse.ok) {
+                    throw new Error('Failed to delete appointment');
+                }
+                
+                const deleteResult = await deleteResponse.json();
+                if (!deleteResult.success) {
+                    throw new Error(deleteResult.error || 'Failed to delete appointment');
+                }
+                
+                // Update local data
+                clients = clients.filter(c => c.id !== appointmentId);
+                
+                closeModals();
+                renderCalendar();
+                renderClientsTable();
+                renderBirthdays();
+                
+                // Update statistics if on stats page
+                if (currentSection === 'statistics') {
+                    renderStatistics();
+                }
+                
+                showToast('Запись удалена успешно', 'success');
+            } catch (error) {
+                console.error('Error deleting appointment:', error);
+                showToast('Ошибка при удалении записи', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function renderClientsTable() {
+            const tbody = document.getElementById('clientsTableBody');
+            
+            // Group clients by phone number to show unique clients
+            const uniqueClients = getUniqueClientsWithStats();
+            let filteredClients = filterAndSortUniqueClients(uniqueClients);
+            
+            // Pagination
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageClients = filteredClients.slice(startIndex, endIndex);
+            
+            tbody.innerHTML = '';
+            
+            pageClients.forEach(client => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${client.fio}</td>
+                    <td>${client.phone}</td>
+                    <td>${client.car_brand}</td>
+                    <td>${client.car_number}</td>
+                    <td>${formatDateTime(client.lastVisit)}</td>
+                    <td>${client.totalVisits}</td>
+                    <td>${client.totalSum} ₽</td>
+                `;
+                
+                row.addEventListener('click', () => {
+                    showClientHistory(client);
+                });
+                
+                tbody.appendChild(row);
+            });
+            
+            renderPagination(filteredClients.length);
+        }
+
+        function filterAndSortClients() {
+            let filtered = [...clients];
+            
+            // Search filter
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(client => 
+                    client.fio.toLowerCase().includes(searchTerm) ||
+                    client.phone.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Date filters
+            const dateFrom = document.getElementById('dateFromFilter').value;
+            const dateTo = document.getElementById('dateToFilter').value;
+            
+            if (dateFrom) {
+                filtered = filtered.filter(client => {
+                    const visitDate = new Date(client.visit_datetime);
+                    return visitDate >= new Date(dateFrom);
+                });
+            }
+            
+            if (dateTo) {
+                filtered = filtered.filter(client => {
+                    const visitDate = new Date(client.visit_datetime);
+                    return visitDate <= new Date(dateTo + 'T23:59:59');
+                });
+            }
+            
+            // Car brand filter
+            const carBrand = document.getElementById('carBrandFilter').value;
+            if (carBrand) {
+                filtered = filtered.filter(client => 
+                    client.car_brand === carBrand
+                );
+            }
+            
+            // Sorting
+            if (sortColumn) {
+                filtered.sort((a, b) => {
+                    let valueA = a[sortColumn] || '';
+                    let valueB = b[sortColumn] || '';
+                    
+                    // Special handling for dates and numbers
+                    if (sortColumn === 'visit_datetime') {
+                        valueA = new Date(valueA);
+                        valueB = new Date(valueB);
+                    } else if (sortColumn === 'order_sum') {
+                        valueA = parseFloat(valueA) || 0;
+                        valueB = parseFloat(valueB) || 0;
+                    } else {
+                        valueA = valueA.toString().toLowerCase();
+                        valueB = valueB.toString().toLowerCase();
+                    }
+                    
+                    if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+                    if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+            
+            return filtered;
+        }
+
+        function sortTable(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'asc';
+            }
+            
+            renderClientsTable();
+        }
+
+        function filterClients() {
+            currentPage = 1;
+            renderClientsTable();
+        }
+
+        function renderPagination(totalItems) {
+            const pagination = document.getElementById('pagination');
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let html = '<div class="pagination-container" style="display: flex; justify-content: center; gap: 8px; margin-top: 16px;">';
+            
+            // Previous button
+            if (currentPage > 1) {
+                html += `<button class="btn btn--secondary btn--sm" onclick="goToPage(${currentPage - 1})">‹</button>`;
+            }
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    html += `<button class="btn btn--primary btn--sm">${i}</button>`;
+                } else {
+                    html += `<button class="btn btn--secondary btn--sm" onclick="goToPage(${i})">${i}</button>`;
+                }
+            }
+            
+            // Next button
+            if (currentPage < totalPages) {
+                html += `<button class="btn btn--secondary btn--sm" onclick="goToPage(${currentPage + 1})">›</button>`;
+            }
+            
+            html += '</div>';
+            pagination.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderClientsTable();
+        }
+        
+        // Make showAppointmentDetails globally available for onclick handlers
+        window.showAppointmentDetails = showAppointmentDetails;
+
+        function populateCarBrandFilter() {
+            const select = document.getElementById('carBrandFilter');
+            const brands = [...new Set(clients.map(c => c.car_brand).filter(Boolean))];
+            
+            // Keep existing selection
+            const currentValue = select.value;
+            
+            // Clear and repopulate
+            select.innerHTML = '<option value="">Все марки</option>';
+            
+            brands.sort().forEach(brand => {
+                const option = document.createElement('option');
+                option.value = brand;
+                option.textContent = brand;
+                select.appendChild(option);
+            });
+            
+            // Restore selection
+            select.value = currentValue;
+        }
+
+        function renderBirthdays() {
+            renderTodayBirthdays();
+            renderUpcomingBirthdays();
+        }
+
+        function renderTodayBirthdays() {
+            const container = document.getElementById('todayBirthdaysList');
+            const today = new Date();
+            const todayBirthdays = clients.filter(client => {
+                if (!client.birthdate) return false;
+                const birthDate = parseBirthdate(client.birthdate);
+                return birthDate.getMonth() === today.getMonth() && 
+                       birthDate.getDate() === today.getDate();
+            });
+            
+            if (todayBirthdays.length === 0) {
+                container.innerHTML = '<p style="color: var(--color-text-secondary);">Сегодня нет именинников</p>';
+                return;
+            }
+            
+            container.innerHTML = '<p>🎉 <strong>Сегодня день рождения у следующих клиентов:</strong></p>';
+            
+            todayBirthdays.forEach(client => {
+                const age = calculateAge(parseBirthdate(client.birthdate));
+                const birthdayItem = document.createElement('div');
+                birthdayItem.className = 'birthday-item';
+                
+                birthdayItem.innerHTML = `
+                    <div class="birthday-info">
+                        <h4>${client.fio}</h4>
+                        <p>${client.phone} • ${age} лет</p>
+                    </div>
+                    <div class="contact-buttons">
+                        <a href="tel:${client.phone}" class="btn btn--sm btn-call">📞</a>
+                        <a href="https://wa.me/${client.phone}" target="_blank" class="btn btn--sm btn-whatsapp">💬</a>
+                        <a href="https://t.me/${client.phone}" target="_blank" class="btn btn--sm btn-telegram">✈️</a>
+                    </div>
+                `;
+                
+                container.appendChild(birthdayItem);
+            });
+        }
+
+        function renderUpcomingBirthdays() {
+            const container = document.getElementById('upcomingBirthdaysList');
+            const today = new Date();
+            const upcomingBirthdays = [];
+            
+            clients.forEach(client => {
+                if (!client.birthdate) return;
+                
+                const birthDate = parseBirthdate(client.birthdate);
+                const thisYearBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+                
+                // If birthday already passed this year, check next year
+                if (thisYearBirthday < today) {
+                    thisYearBirthday.setFullYear(today.getFullYear() + 1);
+                }
+                
+                const daysDiff = Math.ceil((thisYearBirthday - today) / (1000 * 60 * 60 * 24));
+                
+                if (daysDiff > 0 && daysDiff <= 7) {
+                    upcomingBirthdays.push({
+                        ...client,
+                        daysDiff,
+                        nextBirthday: thisYearBirthday
+                    });
+                }
+            });
+            
+            upcomingBirthdays.sort((a, b) => a.daysDiff - b.daysDiff);
+            
+            if (upcomingBirthdays.length === 0) {
+                container.innerHTML = '<p style="color: var(--color-text-secondary);">Нет именинников на ближайшие 7 дней</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            upcomingBirthdays.forEach(client => {
+                const age = calculateAge(parseBirthdate(client.birthdate));
+                const birthdayItem = document.createElement('div');
+                birthdayItem.className = 'birthday-item';
+                
+                const dayText = client.daysDiff === 1 ? 'завтра' : `через ${client.daysDiff} дней`;
+                
+                birthdayItem.innerHTML = `
+                    <div class="birthday-info">
+                        <h4>${client.fio}</h4>
+                        <p>${client.phone} • ${age + 1} лет (${dayText})</p>
+                    </div>
+                    <div class="contact-buttons">
+                        <a href="tel:${client.phone}" class="btn btn--sm btn-call">📞</a>
+                        <a href="https://wa.me/${client.phone}" target="_blank" class="btn btn--sm btn-whatsapp">💬</a>
+                        <a href="https://t.me/${client.phone}" target="_blank" class="btn btn--sm btn-telegram">✈️</a>
+                    </div>
+                `;
+                
+                container.appendChild(birthdayItem);
+            });
+        }
+
+        // Utility functions
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('show');
+            });
+        }
+
+        function populateTimeSlots() {
+            const select = document.getElementById('visitTime');
+            select.innerHTML = '<option value="">Выберите время</option>';
+            
+            timeSlots.forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                select.appendChild(option);
+            });
+        }
+
+        function formatPhoneNumber(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 0 && !value.startsWith('7')) {
+                if (value.startsWith('8')) {
+                    value = '7' + value.slice(1);
+                } else {
+                    value = '7' + value;
+                }
+            }
+            
+            if (value.length > 11) {
+                value = value.slice(0, 11);
+            }
+            
+            e.target.value = '+' + value;
+        }
+
+        function generateId() {
+            return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+        }
+
+        function formatDateForComparison(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatDateForInput(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function formatBirthdateForInput(birthdate) {
+            if (!birthdate) return '';
+            const parts = birthdate.split('.');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+            }
+            return birthdate;
+        }
+
+        function formatBirthdateForStorage(date) {
+            if (!date) return '';
+            const d = new Date(date);
+            return `${d.getDate().toString().padStart(2, '0')}.${(d.getMonth() + 1).toString().padStart(2, '0')}.${d.getFullYear()}`;
+        }
+
+        function parseBirthdate(birthdate) {
+            if (!birthdate) return new Date();
+            const parts = birthdate.split('.');
+            if (parts.length === 3) {
+                return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+            }
+            return new Date(birthdate);
+        }
+
+        function formatTime(date) {
+            return date.toTimeString().slice(0, 5);
+        }
+
+        function formatDateTime(date) {
+            if (typeof date === 'string') {
+                date = new Date(date);
+            }
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${day}.${month}.${year} ${hours}:${minutes}`;
+        }
+
+        function isSameDay(date1, date2) {
+            return date1.getFullYear() === date2.getFullYear() &&
+                   date1.getMonth() === date2.getMonth() &&
+                   date1.getDate() === date2.getDate();
+        }
+
+        function calculateAge(birthDate) {
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        // Storage functions (using variables instead of localStorage due to sandbox restrictions)
+        let memoryStorage = {};
+
+        function storeValue(key, value) {
+            memoryStorage[key] = value;
+        }
+
+        function getStoredValue(key) {
+            return memoryStorage[key];
+        }
+
+        function removeStoredValue(key) {
+            delete memoryStorage[key];
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'success') {
+            // Remove existing toast
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✅' : type === 'warning' ? '⚠️' : '❌';
+            
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <div class="toast-icon">${icon}</div>
+                    <div class="toast-message">${message}</div>
+                    <button class="toast-close">&times;</button>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                    }
+                }, 300);
+            }, 3000);
+            
+            // Close button
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                    }
+                }, 300);
+            });
+        }
+
+        // Loading indicator
+        function showLoading() {
+            const existingLoader = document.querySelector('.loading');
+            if (existingLoader) return;
+            
+            const loader = document.createElement('div');
+            loader.className = 'loading';
+            loader.innerHTML = '<div class="spinner"></div>';
+            
+            document.body.appendChild(loader);
+        }
+
+        function hideLoading() {
+            const loader = document.querySelector('.loading');
+            if (loader) {
+                loader.remove();
+            }
+        }
+    </script>
+
+</body></html>
