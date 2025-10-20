@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- saved from url=(0152)https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/75f4332abab4c6868ce86439b9bd249f/e7a785f2-b4ad-484a-8932-53b5b5076935/index.html -->
-<html lang="ru"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SVservice125 - Административная панель</title>
     <style>
@@ -143,11 +143,14 @@
           --container-lg: 1024px;
           --container-xl: 1280px;
         
-          /* Custom app colors */
+          /* Custom app colors - Updated according to requirements */
           --app-primary: #2563eb;
           --app-danger: #dc2626;
           --app-background: #f8fafc;
           --app-text: #1e293b;
+          --app-success: #059669;
+          --app-warning: #d97706;
+          --app-secondary: #64748b;
         }
         
         /* Base styles */
@@ -193,7 +196,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--app-primary) 0%, var(--color-teal-600) 100%);
+            background: linear-gradient(135deg, var(--app-primary) 0%, #1e40af 100%);
         }
         
         .login-form {
@@ -300,6 +303,10 @@
             background: #1d4ed8;
         }
         
+        .btn--primary:active {
+            background: #1e3a8a;
+        }
+        
         .btn--secondary {
             background: var(--color-secondary);
             color: var(--color-text);
@@ -318,6 +325,28 @@
             background: #b91c1c;
         }
         
+        .btn--danger:active {
+            background: #991b1b;
+        }
+        
+        .btn--success {
+            background: var(--app-success);
+            color: var(--color-white);
+        }
+        
+        .btn--success:hover {
+            background: #047857;
+        }
+        
+        .btn--warning {
+            background: var(--app-warning);
+            color: var(--color-white);
+        }
+        
+        .btn--warning:hover {
+            background: #b45309;
+        }
+        
         .btn--full-width {
             width: 100%;
         }
@@ -325,6 +354,11 @@
         .btn--sm {
             padding: var(--space-6) var(--space-12);
             font-size: var(--font-size-sm);
+        }
+        
+        .btn--xs {
+            padding: var(--space-4) var(--space-8);
+            font-size: var(--font-size-xs);
         }
         
         .btn:disabled {
@@ -471,6 +505,12 @@
             overflow: hidden;
             text-overflow: ellipsis;
             cursor: pointer;
+            transition: all var(--duration-fast);
+        }
+        
+        .appointment-item:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
         }
         
         .appointment-count {
@@ -803,6 +843,19 @@
             display: none !important;
         }
         
+        /* Form validation styles */
+        .form-control.error {
+            border-color: var(--app-danger) !important;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+        
+        .field-error {
+            color: var(--app-danger);
+            font-size: var(--font-size-xs);
+            margin-top: var(--space-4);
+            display: block;
+        }
+        
         /* Client type selection */
         .client-type-selection {
             display: flex;
@@ -981,6 +1034,85 @@
             cursor: not-allowed;
         }
         
+        /* Enhanced styling for better UX */
+        .search-result-item:first-child {
+            border-top-left-radius: var(--radius-base);
+            border-top-right-radius: var(--radius-base);
+        }
+        
+        .search-result-item:last-child {
+            border-bottom-left-radius: var(--radius-base);
+            border-bottom-right-radius: var(--radius-base);
+        }
+        
+        .stats-section h3 {
+            color: var(--app-primary);
+        }
+        
+        .birthday-item {
+            transition: all var(--duration-fast);
+        }
+        
+        .birthday-item:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Loading spinner animation */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        /* Improved table styling */
+        .table tbody tr:nth-child(even) {
+            background: rgba(var(--app-primary), 0.02);
+        }
+        
+        .table th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        /* Client type buttons styling */
+        .client-type-btn {
+            transition: all var(--duration-fast);
+        }
+        
+        .client-type-btn:not(.active):hover {
+            background: var(--color-secondary-hover);
+            color: var(--color-text);
+        }
+        
+        /* Calendar day improvements */
+        .calendar-day.selected {
+            background: var(--color-bg-1);
+            border: 2px solid var(--app-primary);
+        }
+        
+        /* Responsive improvements */
+        @media (max-width: 480px) {
+            .appointment-item {
+                font-size: 9px;
+                padding: var(--space-1) var(--space-2);
+            }
+            
+            .calendar-day {
+                min-height: 60px;
+                padding: var(--space-4);
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: var(--space-8);
+            }
+        }
+        
         @media (max-width: 768px) {
             .stats-details {
                 grid-template-columns: 1fr;
@@ -1012,11 +1144,11 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label class="form-label" for="username">Логин</label>
-                    <input type="text" id="username" class="form-control" required="">
+                    <input type="text" id="username" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">Пароль</label>
-                    <input type="password" id="password" class="form-control" required="">
+                    <input type="password" id="password" class="form-control" required>
                 </div>
                 <div class="form-check">
                     <input type="checkbox" id="remember" name="remember">
@@ -1046,12 +1178,14 @@
                 <div class="calendar-header">
                     <div class="calendar-navigation">
                         <button id="prevMonth" class="btn btn--secondary">‹</button>
-                        <div id="currentMonth" class="calendar-month">Октябрь 2025</div>
+                        <div id="currentMonth" class="calendar-month"></div>
                         <button id="nextMonth" class="btn btn--secondary">›</button>
                     </div>
                     <button id="addAppointmentBtn" class="btn btn--primary">+ Добавить запись</button>
                 </div>
-                <div id="calendarGrid" class="calendar-grid"><div class="calendar-day-header">Пн</div><div class="calendar-day-header">Вт</div><div class="calendar-day-header">Ср</div><div class="calendar-day-header">Чт</div><div class="calendar-day-header">Пт</div><div class="calendar-day-header">Сб</div><div class="calendar-day-header">Вс</div><div class="calendar-day other-month"><div class="day-number">29</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">30</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">1</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">2</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">3</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">4</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">5</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">6</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">7</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">8</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">9</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">10</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">11</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">12</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">13</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">14</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">15</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">16</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">17</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">18</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">19</div><div class="day-appointments"></div></div><div class="calendar-day today"><div class="day-number">20</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">21</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">22</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">23</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">24</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">25</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">26</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">27</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">28</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">29</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">30</div><div class="day-appointments"></div></div><div class="calendar-day"><div class="day-number">31</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">1</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">2</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">3</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">4</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">5</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">6</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">7</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">8</div><div class="day-appointments"></div></div><div class="calendar-day other-month"><div class="day-number">9</div><div class="day-appointments"></div></div></div>
+                <div id="calendarGrid" class="calendar-grid">
+                    <!-- Calendar will be generated here -->
+                </div>
                 <button class="floating-btn" id="floatingAddBtn" title="Добавить запись">+</button>
             </div>
 
@@ -1189,7 +1323,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title" id="appointmentModalTitle">Добавить запись</h3>
-                <button class="modal-close" type="button">×</button>
+                <button class="modal-close" type="button">&times;</button>
             </div>
             <div class="modal-body">
                 <!-- Client Type Selection -->
@@ -1209,61 +1343,61 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="clientFio">ФИО клиента *</label>
-                            <input type="text" id="clientFio" class="form-control" required="">
+                            <input type="text" id="clientFio" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="clientPhone">Номер телефона *</label>
-                            <input type="tel" id="clientPhone" class="form-control" placeholder="+79991234567" required="">
+                            <input type="tel" id="clientPhone" class="form-control" placeholder="+79991234567" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="clientBirthdate">Дата рождения *</label>
-                            <input type="date" id="clientBirthdate" class="form-control" required="">
+                            <input type="date" id="clientBirthdate" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="carBrand">Марка автомобиля *</label>
-                            <input type="text" id="carBrand" class="form-control" required="">
+                            <input type="text" id="carBrand" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="carNumber">Номер автомобиля *</label>
-                            <input type="text" id="carNumber" class="form-control" required="">
+                            <input type="text" id="carNumber" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="mileage">Пробег *</label>
-                            <input type="number" id="mileage" class="form-control" required="">
+                            <input type="number" id="mileage" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="vin">VIN номер *</label>
-                        <input type="text" id="vin" class="form-control" required="">
+                        <input type="text" id="vin" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="serviceDescription">Описание работы/услуги *</label>
-                        <textarea id="serviceDescription" class="form-control" required=""></textarea>
+                        <textarea id="serviceDescription" class="form-control" required></textarea>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="orderSum">Сумма заказа *</label>
-                            <input type="number" id="orderSum" class="form-control" required="">
+                            <input type="number" id="orderSum" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="visitDate">Дата визита *</label>
-                            <input type="date" id="visitDate" class="form-control" required="">
+                            <input type="date" id="visitDate" class="form-control" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="visitTime">Время визита *</label>
-                        <select id="visitTime" class="form-control" required="">
+                        <select id="visitTime" class="form-control" required>
                             <option value="">Выберите время</option>
                         </select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn--secondary" data-modal-close="">Отмена</button>
+                <button type="button" class="btn btn--secondary" data-modal-close>Отмена</button>
                 <button type="button" id="editClientDataBtn" class="btn btn--secondary hidden">Изменить данные клиента</button>
                 <button type="submit" form="appointmentForm" class="btn btn--primary">Сохранить</button>
             </div>
@@ -1275,13 +1409,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Детали записи</h3>
-                <button class="modal-close" type="button">×</button>
+                <button class="modal-close" type="button">&times;</button>
             </div>
             <div class="modal-body" id="appointmentDetailsBody">
                 <!-- Details will be populated here -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn--secondary" data-modal-close="">Закрыть</button>
+                <button type="button" class="btn btn--secondary" data-modal-close>Закрыть</button>
                 <button type="button" id="editAppointmentBtn" class="btn btn--primary">Редактировать</button>
                 <button type="button" id="deleteAppointmentBtn" class="btn btn--danger">Удалить</button>
             </div>
@@ -1293,13 +1427,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Конфликт времени</h3>
-                <button class="modal-close" type="button">×</button>
+                <button class="modal-close" type="button">&times;</button>
             </div>
             <div class="modal-body" id="conflictMessage">
                 <!-- Conflict message will be shown here -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn--secondary" data-modal-close="">Нет, выбрать другое время</button>
+                <button type="button" class="btn btn--secondary" data-modal-close>Нет, выбрать другое время</button>
                 <button type="button" id="forceAddBtn" class="btn btn--primary">Да, добавить</button>
             </div>
         </div>
@@ -1328,6 +1462,13 @@
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-rTbqJ69xQoznTTnWuKOukv2u7RtJ_V9_SS7ubIdNBHfJfqfTaxSrTz0rlbN5xMuv_w/exec';
         const SPREADSHEET_ID = '1divp7XM6GxUyrxHquaXV18kB0k-e-9Qb_bPD850StKQ';
 
+        // Hardcoded users for authentication
+        const HARDCODED_USERS = [
+            { login: 'admin', password: 'admin123' },
+            { login: 'manager', password: 'manager123' },
+            { login: 'user', password: 'user123' }
+        ];
+
         // Time slots for appointments
         const timeSlots = [
             '00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30',
@@ -1347,11 +1488,18 @@
             // Check if user should be remembered
             const remembered = getStoredValue('remembered');
             if (remembered) {
-                try {
-                    await loadData();
-                    showMainApp();
-                } catch (error) {
-                    console.error('Failed to auto-login:', error);
+                const storedUser = getStoredValue('currentUser');
+                if (storedUser) {
+                    try {
+                        currentUser = JSON.parse(storedUser);
+                        isAuthenticated = true;
+                        showMainApp();
+                        loadDataInBackground();
+                    } catch (error) {
+                        console.error('Failed to restore user session:', error);
+                        showLoginScreen();
+                    }
+                } else {
                     showLoginScreen();
                 }
             } else {
@@ -1410,6 +1558,12 @@
 
             // Phone validation
             document.getElementById('clientPhone').addEventListener('input', formatPhoneNumber);
+            
+            // Form validation on input
+            document.querySelectorAll('#appointmentForm .form-control[required]').forEach(field => {
+                field.addEventListener('blur', validateField);
+                field.addEventListener('input', clearFieldError);
+            });
 
             // Visit date change
             document.getElementById('visitDate').addEventListener('change', updateTimeSlots);
@@ -1465,45 +1619,29 @@
             const password = document.getElementById('password').value.trim();
             const remember = document.getElementById('remember').checked;
 
-            console.log('🔐 [DEBUG] Login attempt:', { username, password: '***' });
+            console.log('🔐 [AUTH] Login attempt for user:', username);
 
-            try {
-                showLoading();
-                await loadAdmins();
+            // Check against hardcoded users first (no network required)
+            const user = HARDCODED_USERS.find(u => u.login === username && u.password === password);
+            
+            if (user) {
+                console.log('✅ [AUTH] Authentication successful');
+                isAuthenticated = true;
+                currentUser = user;
                 
-                console.log('🔐 [DEBUG] Available admins for comparison:', admins.map(a => ({ login: a.login, password: '***' })));
-                console.log('🔐 [DEBUG] User input:', { username, password: '***' });
-                
-                // Strict comparison with trimmed values
-                const admin = admins.find(a => {
-                    const loginMatch = a.login === username;
-                    const passwordMatch = a.password === password;
-                    console.log(`🔐 [DEBUG] Checking admin '${a.login}': login=${loginMatch}, password=${passwordMatch}`);
-                    return loginMatch && passwordMatch;
-                });
-                
-                console.log('🔐 [DEBUG] Authentication result:', admin ? 'SUCCESS' : 'FAILED');
-                
-                if (admin) {
-                    isAuthenticated = true;
-                    currentUser = admin;
-                    
-                    if (remember) {
-                        storeValue('remembered', true);
-                    }
-                    
-                    await loadClients();
-                    showMainApp();
-                    showToast('Вход выполнен успешно', 'success');
-                } else {
-                    console.log('❌ [DEBUG] No matching admin found');
-                    showToast('Неверный логин или пароль', 'error');
+                if (remember) {
+                    storeValue('remembered', true);
+                    storeValue('currentUser', JSON.stringify(user));
                 }
-            } catch (error) {
-                console.error('❌ [DEBUG] Login error:', error);
-                showToast('Ошибка при входе в систему', 'error');
-            } finally {
-                hideLoading();
+                
+                showMainApp();
+                showToast('Вход выполнен успешно', 'success');
+                
+                // Try to load data in background
+                loadDataInBackground();
+            } else {
+                console.log('❌ [AUTH] Authentication failed');
+                showToast('Неверный логин или пароль', 'error');
             }
         }
 
@@ -1511,107 +1649,66 @@
             isAuthenticated = false;
             currentUser = null;
             removeStoredValue('remembered');
+            removeStoredValue('currentUser');
             showLoginScreen();
             showToast('Вы вышли из системы', 'success');
         }
 
-        async function loadData() {
-            await loadAdmins();
-            await loadClients();
+        async function loadDataInBackground() {
+            try {
+                console.log('📊 [DATA] Loading clients from Google Sheets...');
+                await loadClients();
+                console.log('✅ [DATA] Data loaded successfully from Google Sheets');
+                showToast('Данные загружены из Google Sheets', 'success');
+            } catch (error) {
+                console.warn('⚠️ [DATA] Failed to load from Google Sheets, working offline:', error);
+                showToast('Работаем в автономном режиме', 'warning');
+                // Initialize empty data structures
+                clients = [];
+                renderCalendar();
+                renderClientsTable();
+                renderBirthdays();
+                populateCarBrandFilter();
+            }
         }
 
+        // This function is no longer needed as we use hardcoded users
+        // Keeping it as placeholder in case needed for future enhancements
         async function loadAdmins() {
-            try {
-                console.log('🔍 [DEBUG] Attempting to load admins from Google Sheets...');
-                
-                // First try direct Google Sheets API
-                const sheetsUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Admins?alt=json`;
-                console.log('🔍 [DEBUG] Trying Google Sheets API:', sheetsUrl);
-                
-                const response = await fetch(sheetsUrl);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('🔍 [DEBUG] Google Sheets API response:', data);
-                    
-                    if (data.values && data.values.length > 1) {
-                        // data.values[0] = headers, data.values[1] and onwards = data
-                        const headers = data.values[0];
-                        console.log('🔍 [DEBUG] Headers:', headers);
-                        
-                        admins = [];
-                        for (let i = 1; i < data.values.length; i++) {
-                            const row = data.values[i];
-                            if (row && row.length >= 2) {
-                                const admin = {
-                                    login: (row[0] || '').toString().trim(),
-                                    password: (row[1] || '').toString().trim()
-                                };
-                                if (admin.login && admin.password) {
-                                    admins.push(admin);
-                                }
-                            }
-                        }
-                        console.log('🔍 [DEBUG] Parsed admins:', admins.map(a => ({ login: a.login, password: '***' })));
-                        
-                        if (admins.length > 0) {
-                            console.log('✅ [DEBUG] Successfully loaded admins from Google Sheets');
-                            return;
-                        }
-                    }
-                }
-                
-                // Fallback: try Apps Script
-                console.log('⚠️ [DEBUG] Google Sheets API failed, trying Apps Script...');
-                const appsScriptResponse = await fetch(`${APPS_SCRIPT_URL}?action=getAdmins`);
-                
-                if (appsScriptResponse.ok) {
-                    const appsScriptData = await appsScriptResponse.json();
-                    console.log('🔍 [DEBUG] Apps Script response:', appsScriptData);
-                    
-                    if (appsScriptData.admins && appsScriptData.admins.length > 0) {
-                        admins = appsScriptData.admins.map(admin => ({
-                            login: (admin.login || '').toString().trim(),
-                            password: (admin.password || '').toString().trim()
-                        }));
-                        console.log('✅ [DEBUG] Successfully loaded admins from Apps Script');
-                        return;
-                    }
-                }
-                
-                throw new Error('Failed to load from both sources');
-                
-            } catch (error) {
-                console.error('❌ [DEBUG] Error loading admins:', error);
-                
-                // Ultimate fallback: hardcoded admin
-                console.log('🔧 [DEBUG] Using fallback authentication: admin/admin123');
-                admins = [
-                    {
-                        login: 'admin',
-                        password: 'admin123'
-                    }
-                ];
-                
-                // Show notification about local auth
-                showToast('Используется локальная авторизация', 'warning');
-            }
+            console.log('🔧 [AUTH] Using hardcoded authentication');
+            admins = [...HARDCODED_USERS];
         }
 
         async function loadClients() {
             try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=getClients`);
-                if (!response.ok) throw new Error('Failed to fetch clients');
+                const response = await fetch(`${APPS_SCRIPT_URL}?action=getClients`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
                 
                 const data = await response.json();
-                clients = (data.clients || []).filter(client => client.fio); // Filter out empty rows
+                
+                if (data.success === false) {
+                    throw new Error(data.error || 'Unknown error from server');
+                }
+                
+                clients = (data.clients || []).filter(client => client && client.fio); // Filter out empty rows
+                
+                console.log(`📊 [DATA] Loaded ${clients.length} clients from Google Sheets`);
                 
                 renderCalendar();
                 renderClientsTable();
                 renderBirthdays();
                 populateCarBrandFilter();
+                
             } catch (error) {
-                console.error('Error loading clients:', error);
+                console.error('❌ [DATA] Error loading clients:', error);
                 throw error;
             }
         }
@@ -1783,6 +1880,19 @@
             
             switchClientType('new');
             updateTimeSlots();
+            // Add click handlers to visit rows
+            modal.querySelectorAll('[data-visit-id]').forEach(row => {
+                row.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const visitId = row.dataset.visitId;
+                    const visit = clientVisits.find(v => (v.id || v.visit_datetime) === visitId);
+                    if (visit) {
+                        modal.classList.remove('show');
+                        setTimeout(() => showAppointmentDetails(visit), 100);
+                    }
+                });
+            });
+            
             modal.classList.add('show');
         }
 
@@ -1898,20 +2008,60 @@
         }
 
         function validateAppointmentForm(data) {
-            // Basic validation
-            const requiredFields = ['fio', 'phone', 'birthdate', 'car_brand', 'car_number', 'mileage', 'vin', 'service_description', 'order_sum', 'visitDate', 'visitTime'];
+            // Clear all existing errors
+            document.querySelectorAll('.field-error').forEach(error => error.remove());
+            document.querySelectorAll('.form-control.error').forEach(field => field.classList.remove('error'));
             
-            for (const field of requiredFields) {
-                if (!data[field]) {
-                    showToast('Заполните все обязательные поля', 'error');
-                    return false;
+            // Basic validation
+            const requiredFields = {
+                'fio': 'ФИО',
+                'phone': 'Телефон',
+                'birthdate': 'Дата рождения',
+                'car_brand': 'Марка автомобиля',
+                'car_number': 'Номер автомобиля',
+                'mileage': 'Пробег',
+                'vin': 'VIN номер',
+                'service_description': 'Описание работы',
+                'order_sum': 'Сумма заказа',
+                'visitDate': 'Дата визита',
+                'visitTime': 'Время визита'
+            };
+            
+            let hasErrors = false;
+            
+            for (const [fieldKey, fieldName] of Object.entries(requiredFields)) {
+                if (!data[fieldKey]) {
+                    const fieldElement = document.getElementById(fieldKey === 'visitDate' ? 'visitDate' : 
+                                                                fieldKey === 'visitTime' ? 'visitTime' : 
+                                                                fieldKey === 'service_description' ? 'serviceDescription' :
+                                                                fieldKey === 'order_sum' ? 'orderSum' :
+                                                                fieldKey === 'car_brand' ? 'carBrand' :
+                                                                fieldKey === 'car_number' ? 'carNumber' :
+                                                                'client' + fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1));
+                    if (fieldElement) {
+                        showFieldError(fieldElement, `${fieldName} обязательно`);
+                        hasErrors = true;
+                    }
                 }
             }
             
             // Phone validation
             const phoneRegex = /^\+7\d{10}$/;
-            if (!phoneRegex.test(data.phone)) {
-                showToast('Номер телефона должен быть в формате +7XXXXXXXXXX', 'error');
+            if (data.phone && !phoneRegex.test(data.phone)) {
+                const phoneField = document.getElementById('clientPhone');
+                showFieldError(phoneField, 'Номер телефона должен быть в формате +7XXXXXXXXXX');
+                hasErrors = true;
+            }
+            
+            // Order sum validation
+            if (data.order_sum && parseFloat(data.order_sum) <= 0) {
+                const sumField = document.getElementById('orderSum');
+                showFieldError(sumField, 'Сумма заказа должна быть больше 0');
+                hasErrors = true;
+            }
+            
+            if (hasErrors) {
+                showToast('Исправьте ошибки в форме', 'error');
                 return false;
             }
             
@@ -1960,35 +2110,42 @@
                     mileage: data.mileage,
                     vin: data.vin,
                     service_description: data.service_description,
-                    order_sum: data.order_sum,
+                    order_sum: parseFloat(data.order_sum) || 0,
                     visit_datetime: visitDateTime.toISOString(),
                     created_at: editingAppointment ? editingAppointment.created_at : now.toISOString()
                 };
                 
-                // Save to Apps Script
-                const saveData = {
-                    action: editingAppointment ? 'updateClient' : 'addClient',
-                    client: appointment
-                };
-                
-                const saveResponse = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(saveData)
-                });
-                
-                if (!saveResponse.ok) {
-                    throw new Error('Failed to save appointment');
+                try {
+                    // Try to save to Apps Script
+                    const saveData = {
+                        action: editingAppointment ? 'updateClient' : 'addClient',
+                        client: appointment
+                    };
+                    
+                    const saveResponse = await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(saveData)
+                    });
+                    
+                    if (saveResponse.ok) {
+                        const saveResult = await saveResponse.json();
+                        if (saveResult.success) {
+                            console.log('✅ [SAVE] Successfully saved to Google Sheets');
+                        } else {
+                            throw new Error(saveResult.error || 'Server returned error');
+                        }
+                    } else {
+                        throw new Error(`HTTP ${saveResponse.status}: ${saveResponse.statusText}`);
+                    }
+                } catch (saveError) {
+                    console.warn('⚠️ [SAVE] Failed to save to Google Sheets, saving locally:', saveError);
+                    showToast('Сохранено локально (нет связи с Google Sheets)', 'warning');
                 }
                 
-                const saveResult = await saveResponse.json();
-                if (!saveResult.success) {
-                    throw new Error(saveResult.error || 'Failed to save appointment');
-                }
-                
-                // Update local data
+                // Update local data regardless of remote save success
                 if (editingAppointment) {
                     const index = clients.findIndex(c => c.id === editingAppointment.id);
                     if (index !== -1) {
@@ -2014,7 +2171,7 @@
                 
                 editingAppointment = null;
             } catch (error) {
-                console.error('Error saving appointment:', error);
+                console.error('❌ [SAVE] Critical error saving appointment:', error);
                 showToast('Ошибка при сохранении записи', 'error');
             } finally {
                 hideLoading();
@@ -2158,6 +2315,11 @@
             
             tbody.innerHTML = '';
             
+            if (pageClients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--color-text-secondary);">Клиенты не найдены</td></tr>';
+                return;
+            }
+            
             pageClients.forEach(client => {
                 const row = document.createElement('tr');
                 
@@ -2168,7 +2330,7 @@
                     <td>${client.car_number}</td>
                     <td>${formatDateTime(client.lastVisit)}</td>
                     <td>${client.totalVisits}</td>
-                    <td>${client.totalSum} ₽</td>
+                    <td>${Math.round(client.totalSum)} ₽</td>
                 `;
                 
                 row.addEventListener('click', () => {
@@ -2301,8 +2463,263 @@
             renderClientsTable();
         }
         
-        // Make showAppointmentDetails globally available for onclick handlers
+        // Statistics functionality
+        function renderStatistics() {
+            // Set default date range if not set
+            if (!statsDateRange.from || !statsDateRange.to) {
+                applyQuickFilter('this_month');
+            } else {
+                calculateAndDisplayStats();
+            }
+        }
+        
+        function applyQuickFilter(period) {
+            const today = new Date();
+            const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+            
+            let from, to;
+            
+            switch (period) {
+                case 'today':
+                    from = startOfToday;
+                    to = endOfToday;
+                    break;
+                case 'yesterday':
+                    from = new Date(startOfToday);
+                    from.setDate(from.getDate() - 1);
+                    to = new Date(from);
+                    to.setHours(23, 59, 59);
+                    break;
+                case 'this_week':
+                    from = new Date(startOfToday);
+                    from.setDate(from.getDate() - from.getDay() + 1); // Monday
+                    to = endOfToday;
+                    break;
+                case 'this_month':
+                    from = new Date(today.getFullYear(), today.getMonth(), 1);
+                    to = endOfToday;
+                    break;
+                case 'last_month':
+                    from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    to = new Date(today.getFullYear(), today.getMonth(), 0, 23, 59, 59);
+                    break;
+                case 'this_year':
+                    from = new Date(today.getFullYear(), 0, 1);
+                    to = endOfToday;
+                    break;
+                case 'all_time':
+                    from = new Date('2020-01-01');
+                    to = endOfToday;
+                    break;
+            }
+            
+            statsDateRange = { from, to };
+            
+            // Update input fields
+            document.getElementById('statsDateFrom').value = formatDateForInput(from);
+            document.getElementById('statsDateTo').value = formatDateForInput(to);
+            
+            // Update button states
+            document.querySelectorAll('[data-period]').forEach(btn => {
+                btn.classList.remove('btn--primary');
+                btn.classList.add('btn--secondary');
+            });
+            document.querySelector(`[data-period="${period}"]`).classList.remove('btn--secondary');
+            document.querySelector(`[data-period="${period}"]`).classList.add('btn--primary');
+            
+            calculateAndDisplayStats();
+        }
+        
+        function applyCustomDateFilter() {
+            const from = document.getElementById('statsDateFrom').value;
+            const to = document.getElementById('statsDateTo').value;
+            
+            if (!from || !to) {
+                showToast('Выберите период дат', 'error');
+                return;
+            }
+            
+            if (new Date(from) > new Date(to)) {
+                showToast('Дата начала должна быть раньше даты окончания', 'error');
+                return;
+            }
+            
+            statsDateRange = {
+                from: new Date(from),
+                to: new Date(to + 'T23:59:59')
+            };
+            
+            // Clear quick filter button states
+            document.querySelectorAll('[data-period]').forEach(btn => {
+                btn.classList.remove('btn--primary');
+                btn.classList.add('btn--secondary');
+            });
+            
+            calculateAndDisplayStats();
+        }
+        
+        function calculateAndDisplayStats() {
+            const filteredClients = clients.filter(client => {
+                const visitDate = new Date(client.visit_datetime);
+                return visitDate >= statsDateRange.from && visitDate <= statsDateRange.to;
+            });
+            
+            // Calculate main stats
+            const totalIncome = filteredClients.reduce((sum, client) => sum + (parseFloat(client.order_sum) || 0), 0);
+            const totalOrders = filteredClients.length;
+            const averageCheck = totalOrders > 0 ? totalIncome / totalOrders : 0;
+            
+            // Update display
+            document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('averageCheck').textContent = formatCurrency(averageCheck);
+            
+            // Calculate daily breakdown
+            renderDailyStats(filteredClients);
+            
+            // Calculate top clients and services
+            renderTopClients(filteredClients);
+            renderTopServices(filteredClients);
+        }
+        
+        function renderDailyStats(filteredClients) {
+            const dailyMap = new Map();
+            
+            filteredClients.forEach(client => {
+                const dateKey = formatDateForComparison(new Date(client.visit_datetime));
+                if (!dailyMap.has(dateKey)) {
+                    dailyMap.set(dateKey, { orders: 0, sum: 0 });
+                }
+                const day = dailyMap.get(dateKey);
+                day.orders++;
+                day.sum += parseFloat(client.order_sum) || 0;
+            });
+            
+            const sortedDays = Array.from(dailyMap.entries())
+                .sort((a, b) => b[0].localeCompare(a[0]))
+                .slice(0, 10);
+            
+            const tbody = document.getElementById('dailyStatsTable');
+            tbody.innerHTML = sortedDays.map(([date, stats]) => `
+                <tr>
+                    <td>${formatDateForDisplay(date)}</td>
+                    <td>${stats.orders}</td>
+                    <td>${formatCurrency(stats.sum)}</td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderTopClients(filteredClients) {
+            const clientMap = new Map();
+            
+            filteredClients.forEach(client => {
+                const key = client.phone;
+                if (!clientMap.has(key)) {
+                    clientMap.set(key, {
+                        name: client.fio,
+                        phone: client.phone,
+                        sum: 0,
+                        orders: 0
+                    });
+                }
+                const clientStats = clientMap.get(key);
+                clientStats.sum += parseFloat(client.order_sum) || 0;
+                clientStats.orders++;
+            });
+            
+            const topClients = Array.from(clientMap.values())
+                .sort((a, b) => b.sum - a.sum)
+                .slice(0, 5);
+            
+            const container = document.getElementById('topClients');
+            container.innerHTML = topClients.map((client, index) => `
+                <div class="top-item">
+                    <div class="top-item-rank">${index + 1}</div>
+                    <div class="top-item-name">${client.name}</div>
+                    <div class="top-item-value">${formatCurrency(client.sum)}</div>
+                </div>
+            `).join('');
+        }
+        
+        function renderTopServices(filteredClients) {
+            const serviceMap = new Map();
+            
+            filteredClients.forEach(client => {
+                const service = client.service_description || 'Не указано';
+                if (!serviceMap.has(service)) {
+                    serviceMap.set(service, { count: 0, sum: 0 });
+                }
+                const serviceStats = serviceMap.get(service);
+                serviceStats.count++;
+                serviceStats.sum += parseFloat(client.order_sum) || 0;
+            });
+            
+            const topServices = Array.from(serviceMap.entries())
+                .sort((a, b) => b[1].count - a[1].count)
+                .slice(0, 5);
+            
+            const container = document.getElementById('topServices');
+            container.innerHTML = topServices.map(([service, stats], index) => `
+                <div class="top-item">
+                    <div class="top-item-rank">${index + 1}</div>
+                    <div class="top-item-name">${service}</div>
+                    <div class="top-item-value">${stats.count} раз</div>
+                </div>
+            `).join('');
+        }
+        
+        function exportStatistics() {
+            const filteredClients = clients.filter(client => {
+                const visitDate = new Date(client.visit_datetime);
+                return visitDate >= statsDateRange.from && visitDate <= statsDateRange.to;
+            });
+            
+            // Create CSV content
+            const headers = ['Дата', 'ФИО', 'Телефон', 'Услуга', 'Сумма'];
+            const csvContent = [headers]
+                .concat(filteredClients.map(client => [
+                    formatDateForDisplay(formatDateForComparison(new Date(client.visit_datetime))),
+                    client.fio,
+                    client.phone,
+                    client.service_description,
+                    client.order_sum
+                ]))
+                .map(row => row.map(field => `"${field}"`).join(','))
+                .join('\n');
+            
+            // Download CSV
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `statistics_${formatDateForComparison(statsDateRange.from)}_${formatDateForComparison(statsDateRange.to)}.csv`;
+            link.click();
+            
+            showToast('Статистика экспортирована в CSV', 'success');
+        }
+        
+        // Helper functions for statistics
+        function formatCurrency(amount) {
+            return Math.round(amount).toLocaleString('ru-RU') + ' ₽';
+        }
+        
+        function formatDateForDisplay(dateStr) {
+            const date = new Date(dateStr);
+            return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
+        }
+        
+        // Make functions globally available for onclick handlers
         window.showAppointmentDetails = showAppointmentDetails;
+        window.goToPage = goToPage;
+        
+        // Global checkLogin function for compatibility
+        window.checkLogin = checkLogin;
+        
+        // Console welcome message
+        console.log('%cSVservice125 v5.0', 'color: #2563eb; font-size: 18px; font-weight: bold;');
+        console.log('%c✅ Аутентификация: Локальная (admin/admin123, manager/manager123, user/user123)', 'color: #059669;');
+        console.log('%c🔄 Данные: Google Sheets с автономным режимом', 'color: #d97706;');
+        console.log('%c📱 Функции: Календарь, Клиенты, Дни рождения, Статистика', 'color: #0891b2;');
 
         function populateCarBrandFilter() {
             const select = document.getElementById('carBrandFilter');
@@ -2463,6 +2880,65 @@
             
             e.target.value = '+' + value;
         }
+        
+        // Form field validation
+        function validateField(e) {
+            const field = e.target;
+            const value = field.value.trim();
+            
+            // Remove existing error styling
+            field.classList.remove('error');
+            
+            if (field.hasAttribute('required') && !value) {
+                showFieldError(field, 'Обязательное поле');
+                return false;
+            }
+            
+            // Phone validation
+            if (field.id === 'clientPhone') {
+                const phoneRegex = /^\+7\d{10}$/;
+                if (value && !phoneRegex.test(value)) {
+                    showFieldError(field, 'Неверный формат телефона');
+                    return false;
+                }
+            }
+            
+            // Number validation
+            if (field.type === 'number' && value) {
+                if (parseFloat(value) < 0) {
+                    showFieldError(field, 'Значение не может быть отрицательным');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        function showFieldError(field, message) {
+            field.classList.add('error');
+            
+            // Remove existing error message
+            const existingError = field.parentNode.querySelector('.field-error');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Add error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error';
+            errorDiv.style.cssText = 'color: var(--app-danger); font-size: var(--font-size-xs); margin-top: var(--space-4);';
+            errorDiv.textContent = message;
+            field.parentNode.appendChild(errorDiv);
+        }
+        
+        function clearFieldError(e) {
+            const field = e.target;
+            field.classList.remove('error');
+            const errorDiv = field.parentNode.querySelector('.field-error');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        }
 
         function generateId() {
             return Date.now().toString() + Math.random().toString(36).substr(2, 9);
@@ -2534,8 +3010,12 @@
             return age;
         }
 
-        // Storage functions (using variables instead of localStorage due to sandbox restrictions)
+        // Storage functions - enhanced memory storage with better error handling
         let memoryStorage = {};
+        
+        function checkLogin(login, password) {
+            return HARDCODED_USERS.find(u => u.login === login && u.password === password) || null;
+        }
 
         function storeValue(key, value) {
             memoryStorage[key] = value;
@@ -2616,6 +3096,310 @@
                 loader.remove();
             }
         }
-    </script>
 
-</body></html>
+        // Client type switching
+        function switchClientType(type) {
+            clientType = type;
+            selectedClientData = null;
+            
+            // Update button states
+            document.querySelectorAll('.client-type-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-type="${type}"]`).classList.add('active');
+            
+            // Clear form when switching types
+            if (type === 'new') {
+                document.getElementById('appointmentForm').reset();
+                if (selectedDate) {
+                    document.getElementById('visitDate').value = formatDateForInput(selectedDate);
+                }
+            }
+            
+            // Show/hide search
+            const searchSection = document.getElementById('existingClientSearch');
+            const searchInput = document.getElementById('clientSearch');
+            const searchResults = document.getElementById('clientSearchResults');
+            
+            if (type === 'existing') {
+                searchSection.classList.remove('hidden');
+                searchInput.focus();
+            } else {
+                searchSection.classList.add('hidden');
+                searchInput.value = '';
+                searchResults.innerHTML = '';
+            }
+            
+            // Enable/disable form fields based on type
+            toggleFormFields(type === 'new');
+        }
+        
+        // Client search functionality
+        function handleClientSearch(e) {
+            const query = e.target.value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('clientSearchResults');
+            
+            if (clientSearchTimeout) {
+                clearTimeout(clientSearchTimeout);
+            }
+            
+            if (query.length < 2) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+            
+            clientSearchTimeout = setTimeout(() => {
+                const uniqueClients = getUniqueClientsWithStats();
+                const matches = uniqueClients.filter(client => 
+                    client.fio.toLowerCase().includes(query) ||
+                    client.phone.toLowerCase().includes(query)
+                ).slice(0, 10);
+                
+                if (matches.length === 0) {
+                    resultsContainer.innerHTML = '<div class="search-result-item">Клиенты не найдены</div>';
+                    return;
+                }
+                
+                resultsContainer.innerHTML = matches.map(client => `
+                    <div class="search-result-item" data-client-id="${client.phone}">
+                        <div class="search-result-name">${client.fio}</div>
+                        <div class="search-result-details">${client.phone} • ${client.car_brand} ${client.car_number}</div>
+                    </div>
+                `).join('');
+                
+                // Add click handlers
+                resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+                    const clientPhone = item.dataset.clientId;
+                    if (clientPhone) {
+                        item.addEventListener('click', () => {
+                            selectExistingClient(clientPhone);
+                        });
+                    }
+                });
+            }, 300);
+        }
+        
+        // Select existing client
+        function selectExistingClient(clientPhone) {
+            const uniqueClients = getUniqueClientsWithStats();
+            const client = uniqueClients.find(c => c.phone === clientPhone);
+            
+            if (client) {
+                selectedClientData = client;
+                
+                // Fill form with client data
+                document.getElementById('clientFio').value = client.fio;
+                document.getElementById('clientPhone').value = client.phone;
+                document.getElementById('clientBirthdate').value = formatBirthdateForInput(client.birthdate);
+                document.getElementById('carBrand').value = client.car_brand;
+                document.getElementById('carNumber').value = client.car_number;
+                document.getElementById('mileage').value = client.mileage || '';
+                document.getElementById('vin').value = client.vin || '';
+                
+                // Clear search
+                document.getElementById('clientSearch').value = client.fio;
+                document.getElementById('clientSearchResults').innerHTML = '';
+                
+                // Disable client data fields
+                toggleFormFields(false);
+                
+                // Show edit button
+                document.getElementById('editClientDataBtn').classList.remove('hidden');
+            }
+        }
+        
+        // Toggle form field states
+        function toggleFormFields(enabled) {
+            const fields = ['clientFio', 'clientPhone', 'clientBirthdate', 'carBrand', 'carNumber', 'mileage', 'vin'];
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (enabled) {
+                    field.removeAttribute('disabled');
+                } else {
+                    field.setAttribute('disabled', 'disabled');
+                }
+            });
+        }
+        
+        // Enable client data editing
+        function enableClientDataEdit() {
+            toggleFormFields(true);
+            document.getElementById('editClientDataBtn').classList.add('hidden');
+            showToast('Редактирование данных клиента включено', 'success');
+        }
+        
+        // Get unique clients with statistics
+        function getUniqueClientsWithStats() {
+            const clientMap = new Map();
+            
+            clients.forEach(client => {
+                const key = client.phone;
+                if (!clientMap.has(key)) {
+                    clientMap.set(key, {
+                        ...client,
+                        totalVisits: 0,
+                        totalSum: 0,
+                        lastVisit: new Date(client.visit_datetime)
+                    });
+                }
+                
+                const existing = clientMap.get(key);
+                existing.totalVisits++;
+                existing.totalSum += parseFloat(client.order_sum) || 0;
+                
+                const visitDate = new Date(client.visit_datetime);
+                if (visitDate > existing.lastVisit) {
+                    existing.lastVisit = visitDate;
+                    // Update with latest data
+                    existing.fio = client.fio;
+                    existing.car_brand = client.car_brand;
+                    existing.car_number = client.car_number;
+                    existing.mileage = client.mileage;
+                    existing.vin = client.vin;
+                }
+            });
+            
+            return Array.from(clientMap.values());
+        }
+        
+        // Filter and sort unique clients
+        function filterAndSortUniqueClients(clients) {
+            let filtered = [...clients];
+            
+            // Search filter
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm) {
+                filtered = filtered.filter(client => 
+                    client.fio.toLowerCase().includes(searchTerm) ||
+                    client.phone.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Date filters
+            const dateFrom = document.getElementById('dateFromFilter').value;
+            const dateTo = document.getElementById('dateToFilter').value;
+            
+            if (dateFrom) {
+                filtered = filtered.filter(client => {
+                    const visitDate = new Date(client.lastVisit);
+                    return visitDate >= new Date(dateFrom);
+                });
+            }
+            
+            if (dateTo) {
+                filtered = filtered.filter(client => {
+                    const visitDate = new Date(client.lastVisit);
+                    return visitDate <= new Date(dateTo + 'T23:59:59');
+                });
+            }
+            
+            // Car brand filter
+            const carBrand = document.getElementById('carBrandFilter').value;
+            if (carBrand) {
+                filtered = filtered.filter(client => 
+                    client.car_brand === carBrand
+                );
+            }
+            
+            // Sorting
+            if (sortColumn) {
+                filtered.sort((a, b) => {
+                    let valueA, valueB;
+                    
+                    switch (sortColumn) {
+                        case 'visit_datetime':
+                            valueA = new Date(a.lastVisit);
+                            valueB = new Date(b.lastVisit);
+                            break;
+                        case 'total_visits':
+                            valueA = a.totalVisits;
+                            valueB = b.totalVisits;
+                            break;
+                        case 'total_sum':
+                            valueA = a.totalSum;
+                            valueB = b.totalSum;
+                            break;
+                        default:
+                            valueA = (a[sortColumn] || '').toString().toLowerCase();
+                            valueB = (b[sortColumn] || '').toString().toLowerCase();
+                    }
+                    
+                    if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+                    if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+            
+            return filtered;
+        }
+        
+        // Show client history
+        function showClientHistory(client) {
+            const modal = document.getElementById('appointmentDetailsModal');
+            const title = modal.querySelector('.modal-title');
+            const body = document.getElementById('appointmentDetailsBody');
+            
+            title.textContent = `История клиента: ${client.fio}`;
+            
+            // Get all visits for this client
+            const clientVisits = clients.filter(c => c.phone === client.phone)
+                .sort((a, b) => new Date(b.visit_datetime) - new Date(a.visit_datetime));
+            
+            body.innerHTML = `
+                <div class="form-group">
+                    <strong>ФИО:</strong> ${client.fio}
+                </div>
+                <div class="form-group">
+                    <strong>Телефон:</strong> ${client.phone}
+                    <div class="contact-buttons">
+                        <a href="tel:${client.phone}" class="btn btn--sm btn-call">📞 Позвонить</a>
+                        <a href="https://wa.me/${client.phone}" target="_blank" class="btn btn--sm btn-whatsapp">💬 WhatsApp</a>
+                        <a href="https://t.me/${client.phone}" target="_blank" class="btn btn--sm btn-telegram">✈️ Telegram</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <strong>Дата рождения:</strong> ${client.birthdate}
+                </div>
+                <div class="form-group">
+                    <strong>Автомобиль:</strong> ${client.car_brand} ${client.car_number}
+                </div>
+                <div class="form-group">
+                    <strong>Всего визитов:</strong> ${client.totalVisits}
+                </div>
+                <div class="form-group">
+                    <strong>Общая сумма:</strong> ${client.totalSum} ₽
+                </div>
+                <div class="form-group">
+                    <strong>История визитов:</strong>
+                    <div class="table-container" style="margin-top: 12px;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Услуга</th>
+                                    <th>Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${clientVisits.map(visit => `
+                                    <tr data-visit-id="${visit.id || visit.visit_datetime}" style="cursor: pointer;">
+                                        <td>${formatDateTime(visit.visit_datetime)}</td>
+                                        <td>${visit.service_description}</td>
+                                        <td>${visit.order_sum} ₽</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            // Hide edit/delete buttons for client history
+            document.getElementById('editAppointmentBtn').style.display = 'none';
+            document.getElementById('deleteAppointmentBtn').style.display = 'none';
+            
+            modal.classList.add('show');
+        }
+    </script>
+</body>
+</html>
