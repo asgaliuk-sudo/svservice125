@@ -1388,11 +1388,19 @@
                             <input type="date" id="visitDate" class="form-control" required>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="visitTime">Время визита *</label>
-                        <select id="visitTime" class="form-control" required>
-                            <option value="">Выберите время</option>
-                        </select>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="visitTimeStart">Время начала *</label>
+                            <select id="visitTimeStart" class="form-control" required>
+                                <option value="">Выберите время</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="visitTimeEnd">Время окончания *</label>
+                            <select id="visitTimeEnd" class="form-control" required>
+                                <option value="">Выберите время</option>
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -1565,8 +1573,10 @@
                 field.addEventListener('input', clearFieldError);
             });
 
-            // Visit date change
+            // Visit date and time changes
             document.getElementById('visitDate').addEventListener('change', updateTimeSlots);
+            document.getElementById('visitTimeStart').addEventListener('change', updateEndTimeSlots);
+            document.getElementById('visitTimeEnd').addEventListener('change', validateTimeRange);
 
             // Search and filters
             document.getElementById('searchInput').addEventListener('input', filterClients);
@@ -1817,7 +1827,7 @@
                 dayAppointments.slice(0, 3).forEach(appointment => {
                     const appointmentElement = document.createElement('div');
                     appointmentElement.className = 'appointment-item';
-                    appointmentElement.textContent = `${appointment.time} ${appointment.fio}`;
+                    appointmentElement.textContent = `${appointment.time} | ${appointment.fio.split(' ')[0]} ${appointment.fio.split(' ')[1] ? appointment.fio.split(' ')[1].charAt(0) + '.' : ''} | ${appointment.car_brand}`;
                     appointmentElement.addEventListener('click', (e) => {
                         e.stopPropagation();
                         showAppointmentDetails(appointment);
@@ -1846,15 +1856,35 @@
         function getAppointmentsForDate(date) {
             const dateStr = formatDateForComparison(date);
             return clients.filter(client => {
-                const visitDate = new Date(client.visit_datetime);
-                return formatDateForComparison(visitDate) === dateStr;
+                if (client.visit_date) {
+                    return client.visit_date === dateStr;
+                } else if (client.visit_datetime) {
+                    const visitDate = new Date(client.visit_datetime);
+                    return formatDateForComparison(visitDate) === dateStr;
+                }
+                return false;
             }).map(client => {
-                const visitTime = new Date(client.visit_datetime);
+                let timeDisplay;
+                if (client.visit_time_start && client.visit_time_end) {
+                    timeDisplay = `${client.visit_time_start}-${client.visit_time_end}`;
+                } else if (client.visit_datetime) {
+                    const visitTime = new Date(client.visit_datetime);
+                    timeDisplay = formatTime(visitTime);
+                } else {
+                    timeDisplay = 'Время не указано';
+                }
                 return {
                     ...client,
-                    time: formatTime(visitTime)
+                    time: timeDisplay
                 };
-            }).sort((a, b) => a.time.localeCompare(b.time));
+            }).sort((a, b) => {
+                const getStartTime = (appt) => {
+                    if (appt.visit_time_start) return appt.visit_time_start;
+                    if (appt.visit_datetime) return formatTime(new Date(appt.visit_datetime));
+                    return '00:00';
+                };
+                return getStartTime(a).localeCompare(getStartTime(b));
+            });
         }
 
         function showAppointmentModal(appointment = null) {
@@ -1880,18 +1910,6 @@
             
             switchClientType('new');
             updateTimeSlots();
-            // Add click handlers to visit rows
-            modal.querySelectorAll('[data-visit-id]').forEach(row => {
-                row.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const visitId = row.dataset.visitId;
-                    const visit = clientVisits.find(v => (v.id || v.visit_datetime) === visitId);
-                    if (visit) {
-                        modal.classList.remove('show');
-                        setTimeout(() => showAppointmentDetails(visit), 100);
-                    }
-                });
-            });
             
             modal.classList.add('show');
         }
@@ -1907,68 +1925,149 @@
             document.getElementById('serviceDescription').value = appointment.service_description || '';
             document.getElementById('orderSum').value = appointment.order_sum || '';
             
-            if (appointment.visit_datetime) {
+            // Handle both new format and legacy format
+            if (appointment.visit_date && appointment.visit_time_start && appointment.visit_time_end) {
+                document.getElementById('visitDate').value = appointment.visit_date;
+                document.getElementById('visitTimeStart').value = appointment.visit_time_start;
+                document.getElementById('visitTimeEnd').value = appointment.visit_time_end;
+            } else if (appointment.visit_datetime) {
                 const visitDate = new Date(appointment.visit_datetime);
                 document.getElementById('visitDate').value = formatDateForInput(visitDate);
-                document.getElementById('visitTime').value = formatTime(visitDate);
+                document.getElementById('visitTimeStart').value = formatTime(visitDate);
+                // Default end time to +1 hour for legacy records
+                const endTime = new Date(visitDate.getTime() + 60 * 60 * 1000);
+                document.getElementById('visitTimeEnd').value = formatTime(endTime);
             }
         }
 
         function updateTimeSlots() {
             const visitDate = document.getElementById('visitDate').value;
-            const timeSelect = document.getElementById('visitTime');
-            const currentTime = timeSelect.value;
+            const timeStartSelect = document.getElementById('visitTimeStart');
+            const timeEndSelect = document.getElementById('visitTimeEnd');
+            const currentStartTime = timeStartSelect.value;
+            const currentEndTime = timeEndSelect.value;
             
-            // Clear and repopulate time slots
-            timeSelect.innerHTML = '<option value="">Выберите время</option>';
+            // Clear and repopulate time slots for start time
+            timeStartSelect.innerHTML = '<option value="">Выберите время</option>';
             
             timeSlots.forEach(time => {
                 const option = document.createElement('option');
                 option.value = time;
                 option.textContent = time;
-                
-                // Check if this time slot is occupied
-                if (visitDate && isTimeSlotOccupied(visitDate, time)) {
-                    option.textContent += ' (занято)';
-                    option.style.color = '#dc2626';
-                }
-                
-                timeSelect.appendChild(option);
+                timeStartSelect.appendChild(option);
             });
             
-            // Restore selected time if it was set
-            if (currentTime) {
-                timeSelect.value = currentTime;
+            // Update end time slots based on start time
+            updateEndTimeSlots();
+            
+            // Restore selected times if they were set
+            if (currentStartTime) {
+                timeStartSelect.value = currentStartTime;
+            }
+            if (currentEndTime) {
+                timeEndSelect.value = currentEndTime;
             }
         }
 
-        function isTimeSlotOccupied(date, time) {
-            const dateTimeStr = `${date}T${time}:00`;
-            return clients.some(client => {
+        function updateEndTimeSlots() {
+            const startTime = document.getElementById('visitTimeStart').value;
+            const timeEndSelect = document.getElementById('visitTimeEnd');
+            const currentEndTime = timeEndSelect.value;
+            
+            // Clear end time options
+            timeEndSelect.innerHTML = '<option value="">Выберите время</option>';
+            
+            if (!startTime) {
+                timeEndSelect.disabled = true;
+                return;
+            }
+            
+            timeEndSelect.disabled = false;
+            
+            const startIndex = timeSlots.indexOf(startTime);
+            if (startIndex === -1) return;
+            
+            // Add end time options (minimum 30 minutes after start)
+            for (let i = startIndex + 1; i < timeSlots.length; i++) {
+                const option = document.createElement('option');
+                option.value = timeSlots[i];
+                option.textContent = timeSlots[i];
+                timeEndSelect.appendChild(option);
+            }
+            
+            // Auto-select +1 hour if available and no current selection
+            if (!currentEndTime) {
+                const defaultEndIndex = startIndex + 2; // +1 hour (2 slots of 30 min each)
+                if (defaultEndIndex < timeSlots.length) {
+                    timeEndSelect.value = timeSlots[defaultEndIndex];
+                }
+            } else if (timeSlots.indexOf(currentEndTime) > startIndex) {
+                timeEndSelect.value = currentEndTime;
+            }
+        }
+
+        function validateTimeRange() {
+            const startTime = document.getElementById('visitTimeStart').value;
+            const endTime = document.getElementById('visitTimeEnd').value;
+            const endField = document.getElementById('visitTimeEnd');
+            
+            // Clear existing error
+            endField.classList.remove('error');
+            const existingError = endField.parentNode.querySelector('.field-error');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            if (!startTime || !endTime) return true;
+            
+            const startIndex = timeSlots.indexOf(startTime);
+            const endIndex = timeSlots.indexOf(endTime);
+            
+            if (endIndex <= startIndex) {
+                showFieldError(endField, 'Время окончания должно быть больше времени начала');
+                return false;
+            }
+            
+            if (endIndex - startIndex < 1) {
+                showFieldError(endField, 'Минимальная продолжительность: 30 минут');
+                return false;
+            }
+            
+            return true;
+        }
+
+        function checkTimeRangeConflict(date, startTime, endTime) {
+            const newStart = new Date(`${date}T${startTime}:00`);
+            const newEnd = new Date(`${date}T${endTime}:00`);
+            
+            const conflicts = clients.filter(client => {
                 if (editingAppointment && client.id === editingAppointment.id) {
                     return false; // Don't count the currently editing appointment
                 }
-                const visitDateTime = new Date(client.visit_datetime);
-                const checkDateTime = new Date(dateTimeStr);
-                return Math.abs(visitDateTime - checkDateTime) < 60000; // Within 1 minute
-            });
-        }
-
-        function checkTimeConflict(date, time) {
-            if (!isTimeSlotOccupied(date, time)) {
-                return null;
-            }
-            
-            const conflictingClient = clients.find(client => {
-                if (editingAppointment && client.id === editingAppointment.id) {
+                
+                // Handle both old format (visit_datetime) and new format (visit_date, visit_time_start, visit_time_end)
+                let existingStart, existingEnd;
+                
+                if (client.visit_time_start && client.visit_time_end && client.visit_date) {
+                    existingStart = new Date(`${client.visit_date}T${client.visit_time_start}:00`);
+                    existingEnd = new Date(`${client.visit_date}T${client.visit_time_end}:00`);
+                } else if (client.visit_datetime) {
+                    existingStart = new Date(client.visit_datetime);
+                    existingEnd = new Date(existingStart.getTime() + 60 * 60 * 1000); // Assume 1 hour duration for old format
+                } else {
                     return false;
                 }
-                const visitDateTime = new Date(client.visit_datetime);
-                const checkDateTime = new Date(`${date}T${time}:00`);
-                return Math.abs(visitDateTime - checkDateTime) < 60000;
+                
+                // Check if date matches
+                if (formatDateForComparison(existingStart) !== date) {
+                    return false;
+                }
+                
+                // Check for time overlap: new start < existing end AND new end > existing start
+                return newStart < existingEnd && newEnd > existingStart;
             });
             
-            return conflictingClient;
+            return conflicts.length > 0 ? conflicts[0] : null;
         }
 
         async function handleAppointmentSubmit(e) {
@@ -1981,8 +2080,14 @@
                 return;
             }
             
-            // Check for time conflicts
-            const conflictingClient = checkTimeConflict(formData.visitDate, formData.visitTime);
+            // Validate time range
+            if (!validateTimeRange()) {
+                showToast('Проверьте временной интервал', 'error');
+                return;
+            }
+            
+            // Check for time range conflicts
+            const conflictingClient = checkTimeRangeConflict(formData.visitDate, formData.visitTimeStart, formData.visitTimeEnd);
             if (conflictingClient) {
                 showTimeConflictModal(conflictingClient, formData);
                 return;
@@ -2003,7 +2108,8 @@
                 service_description: document.getElementById('serviceDescription').value.trim(),
                 order_sum: document.getElementById('orderSum').value,
                 visitDate: document.getElementById('visitDate').value,
-                visitTime: document.getElementById('visitTime').value
+                visitTimeStart: document.getElementById('visitTimeStart').value,
+                visitTimeEnd: document.getElementById('visitTimeEnd').value
             };
         }
 
@@ -2024,7 +2130,8 @@
                 'service_description': 'Описание работы',
                 'order_sum': 'Сумма заказа',
                 'visitDate': 'Дата визита',
-                'visitTime': 'Время визита'
+                'visitTimeStart': 'Время начала',
+                'visitTimeEnd': 'Время окончания'
             };
             
             let hasErrors = false;
@@ -2032,7 +2139,8 @@
             for (const [fieldKey, fieldName] of Object.entries(requiredFields)) {
                 if (!data[fieldKey]) {
                     const fieldElement = document.getElementById(fieldKey === 'visitDate' ? 'visitDate' : 
-                                                                fieldKey === 'visitTime' ? 'visitTime' : 
+                                                                fieldKey === 'visitTimeStart' ? 'visitTimeStart' :
+                                                                fieldKey === 'visitTimeEnd' ? 'visitTimeEnd' :
                                                                 fieldKey === 'service_description' ? 'serviceDescription' :
                                                                 fieldKey === 'order_sum' ? 'orderSum' :
                                                                 fieldKey === 'car_brand' ? 'carBrand' :
@@ -2072,11 +2180,11 @@
             const modal = document.getElementById('conflictModal');
             const message = document.getElementById('conflictMessage');
             
-            const visitDateTime = `${formData.visitDate} ${formData.visitTime}`;
+            const duration = calculateDuration(formData.visitTimeStart, formData.visitTimeEnd);
             message.innerHTML = `
-                <p>В выбранный слот <strong>${formatDateTime(visitDateTime)}</strong> уже записан клиент:</p>
+                <p>В интервале <strong>${formData.visitDate} ${formData.visitTimeStart} - ${formData.visitTimeEnd}</strong> (${duration}) уже есть пересечение с записью:</p>
                 <p><strong>${conflictingClient.fio}</strong></p>
-                <p>Вы точно хотите добавить ещё одного?</p>
+                <p>Хотите всё равно добавить запись?</p>
             `;
             
             // Store form data for potential force add
@@ -2097,7 +2205,6 @@
             try {
                 showLoading();
                 
-                const visitDateTime = new Date(`${data.visitDate}T${data.visitTime}:00`);
                 const now = new Date();
                 
                 const appointment = {
@@ -2111,7 +2218,11 @@
                     vin: data.vin,
                     service_description: data.service_description,
                     order_sum: parseFloat(data.order_sum) || 0,
-                    visit_datetime: visitDateTime.toISOString(),
+                    visit_date: data.visitDate,
+                    visit_time_start: data.visitTimeStart,
+                    visit_time_end: data.visitTimeEnd,
+                    // Keep old format for backward compatibility
+                    visit_datetime: new Date(`${data.visitDate}T${data.visitTimeStart}:00`).toISOString(),
                     created_at: editingAppointment ? editingAppointment.created_at : now.toISOString()
                 };
                 
@@ -2221,7 +2332,7 @@
                     <strong>Сумма заказа:</strong> ${appointment.order_sum} ₽
                 </div>
                 <div class="form-group">
-                    <strong>Дата и время визита:</strong> ${formatDateTime(visitDate)}
+                    <strong>Дата и время визита:</strong> ${getAppointmentTimeDisplay(appointment)}
                 </div>
             `;
             
@@ -2361,14 +2472,28 @@
             
             if (dateFrom) {
                 filtered = filtered.filter(client => {
-                    const visitDate = new Date(client.visit_datetime);
+                    let visitDate;
+                    if (client.visit_date) {
+                        visitDate = new Date(client.visit_date);
+                    } else if (client.visit_datetime) {
+                        visitDate = new Date(client.visit_datetime);
+                    } else {
+                        return false;
+                    }
                     return visitDate >= new Date(dateFrom);
                 });
             }
             
             if (dateTo) {
                 filtered = filtered.filter(client => {
-                    const visitDate = new Date(client.visit_datetime);
+                    let visitDate;
+                    if (client.visit_date) {
+                        visitDate = new Date(client.visit_date);
+                    } else if (client.visit_datetime) {
+                        visitDate = new Date(client.visit_datetime);
+                    } else {
+                        return false;
+                    }
                     return visitDate <= new Date(dateTo + 'T23:59:59');
                 });
             }
@@ -2389,8 +2514,17 @@
                     
                     // Special handling for dates and numbers
                     if (sortColumn === 'visit_datetime') {
-                        valueA = new Date(valueA);
-                        valueB = new Date(valueB);
+                        if (a.visit_date) {
+                            valueA = new Date(a.visit_date);
+                        } else if (a.visit_datetime) {
+                            valueA = new Date(a.visit_datetime);
+                        }
+                        
+                        if (b.visit_date) {
+                            valueB = new Date(b.visit_date);
+                        } else if (b.visit_datetime) {
+                            valueB = new Date(b.visit_datetime);
+                        }
                     } else if (sortColumn === 'order_sum') {
                         valueA = parseFloat(valueA) || 0;
                         valueB = parseFloat(valueB) || 0;
@@ -2561,7 +2695,14 @@
         
         function calculateAndDisplayStats() {
             const filteredClients = clients.filter(client => {
-                const visitDate = new Date(client.visit_datetime);
+                let visitDate;
+                if (client.visit_date) {
+                    visitDate = new Date(client.visit_date);
+                } else if (client.visit_datetime) {
+                    visitDate = new Date(client.visit_datetime);
+                } else {
+                    return false;
+                }
                 return visitDate >= statsDateRange.from && visitDate <= statsDateRange.to;
             });
             
@@ -2587,7 +2728,15 @@
             const dailyMap = new Map();
             
             filteredClients.forEach(client => {
-                const dateKey = formatDateForComparison(new Date(client.visit_datetime));
+                let dateKey;
+                if (client.visit_date) {
+                    dateKey = client.visit_date;
+                } else if (client.visit_datetime) {
+                    dateKey = formatDateForComparison(new Date(client.visit_datetime));
+                } else {
+                    return;
+                }
+                
                 if (!dailyMap.has(dateKey)) {
                     dailyMap.set(dateKey, { orders: 0, sum: 0 });
                 }
@@ -2716,10 +2865,11 @@
         window.checkLogin = checkLogin;
         
         // Console welcome message
-        console.log('%cSVservice125 v5.0', 'color: #2563eb; font-size: 18px; font-weight: bold;');
+        console.log('%cSVservice125 v6.0 - Time Intervals Edition', 'color: #2563eb; font-size: 18px; font-weight: bold;');
         console.log('%c✅ Аутентификация: Локальная (admin/admin123, manager/manager123, user/user123)', 'color: #059669;');
         console.log('%c🔄 Данные: Google Sheets с автономным режимом', 'color: #d97706;');
         console.log('%c📱 Функции: Календарь, Клиенты, Дни рождения, Статистика', 'color: #0891b2;');
+        console.log('%c✨ Новое: Временные интервалы (начало-окончание) + проверка пересечений', 'color: #7c3aed;');
 
         function populateCarBrandFilter() {
             const select = document.getElementById('carBrandFilter');
@@ -2750,7 +2900,11 @@
         function renderTodayBirthdays() {
             const container = document.getElementById('todayBirthdaysList');
             const today = new Date();
-            const todayBirthdays = clients.filter(client => {
+            
+            // Get unique clients based on phone number
+            const uniqueClients = getUniqueClientsWithStats();
+            
+            const todayBirthdays = uniqueClients.filter(client => {
                 if (!client.birthdate) return false;
                 const birthDate = parseBirthdate(client.birthdate);
                 return birthDate.getMonth() === today.getMonth() && 
@@ -2790,7 +2944,10 @@
             const today = new Date();
             const upcomingBirthdays = [];
             
-            clients.forEach(client => {
+            // Get unique clients based on phone number
+            const uniqueClients = getUniqueClientsWithStats();
+            
+            uniqueClients.forEach(client => {
                 if (!client.birthdate) return;
                 
                 const birthDate = parseBirthdate(client.birthdate);
@@ -2852,15 +3009,46 @@
         }
 
         function populateTimeSlots() {
-            const select = document.getElementById('visitTime');
-            select.innerHTML = '<option value="">Выберите время</option>';
+            const startSelect = document.getElementById('visitTimeStart');
+            const endSelect = document.getElementById('visitTimeEnd');
+            
+            startSelect.innerHTML = '<option value="">Выберите время</option>';
+            endSelect.innerHTML = '<option value="">Выберите время</option>';
+            endSelect.disabled = true;
             
             timeSlots.forEach(time => {
                 const option = document.createElement('option');
                 option.value = time;
                 option.textContent = time;
-                select.appendChild(option);
+                startSelect.appendChild(option);
             });
+        }
+
+        function getAppointmentTimeDisplay(appointment) {
+            if (appointment.visit_time_start && appointment.visit_time_end) {
+                const duration = calculateDuration(appointment.visit_time_start, appointment.visit_time_end);
+                const date = appointment.visit_date || formatDateForComparison(new Date(appointment.visit_datetime));
+                return `${formatDateForDisplay(date)} ${appointment.visit_time_start} - ${appointment.visit_time_end} (${duration})`;
+            } else if (appointment.visit_datetime) {
+                return formatDateTime(new Date(appointment.visit_datetime));
+            }
+            return 'Время не указано';
+        }
+
+        function calculateDuration(startTime, endTime) {
+            const start = new Date(`2000-01-01T${startTime}:00`);
+            const end = new Date(`2000-01-01T${endTime}:00`);
+            const diffMs = end - start;
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            
+            if (diffHours === 0) {
+                return `${diffMinutes} мин`;
+            } else if (diffMinutes === 0) {
+                return `${diffHours} ч`;
+            } else {
+                return `${diffHours} ч ${diffMinutes} мин`;
+            }
         }
 
         function formatPhoneNumber(e) {
@@ -3235,11 +3423,20 @@
             clients.forEach(client => {
                 const key = client.phone;
                 if (!clientMap.has(key)) {
+                    let visitDate;
+                    if (client.visit_date) {
+                        visitDate = new Date(client.visit_date);
+                    } else if (client.visit_datetime) {
+                        visitDate = new Date(client.visit_datetime);
+                    } else {
+                        visitDate = new Date();
+                    }
+                    
                     clientMap.set(key, {
                         ...client,
                         totalVisits: 0,
                         totalSum: 0,
-                        lastVisit: new Date(client.visit_datetime)
+                        lastVisit: visitDate
                     });
                 }
                 
@@ -3247,7 +3444,15 @@
                 existing.totalVisits++;
                 existing.totalSum += parseFloat(client.order_sum) || 0;
                 
-                const visitDate = new Date(client.visit_datetime);
+                let visitDate;
+                if (client.visit_date) {
+                    visitDate = new Date(client.visit_date);
+                } else if (client.visit_datetime) {
+                    visitDate = new Date(client.visit_datetime);
+                } else {
+                    visitDate = new Date();
+                }
+                
                 if (visitDate > existing.lastVisit) {
                     existing.lastVisit = visitDate;
                     // Update with latest data
@@ -3375,7 +3580,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Дата</th>
+                                    <th>Дата и время</th>
                                     <th>Услуга</th>
                                     <th>Сумма</th>
                                 </tr>
@@ -3383,7 +3588,7 @@
                             <tbody>
                                 ${clientVisits.map(visit => `
                                     <tr data-visit-id="${visit.id || visit.visit_datetime}" style="cursor: pointer;">
-                                        <td>${formatDateTime(visit.visit_datetime)}</td>
+                                        <td>${getAppointmentTimeDisplay(visit)}</td>
                                         <td>${visit.service_description}</td>
                                         <td>${visit.order_sum} ₽</td>
                                     </tr>
