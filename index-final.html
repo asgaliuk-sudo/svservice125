@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVservice125 - CRM автосервиса</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f1e; color: #fff; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+        .login-form { background: rgba(20, 20, 35, 0.95); padding: 3rem; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); width: 100%; max-width: 450px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .login-form h1 { text-align: center; margin-bottom: 1rem; color: #ff6b35; font-size: 2rem; }
+        .login-form .subtitle { text-align: center; color: #888; margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #ccc; }
+        .form-group input, .form-group textarea { width: 100%; padding: 0.875rem; border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; font-size: 1rem; background: rgba(255, 255, 255, 0.05); color: #fff; transition: all 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #ff6b35; background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+        .btn { padding: 0.875rem; background: linear-gradient(135deg, #ff6b35 0%, #dc2626 100%); color: white; border: none; border-radius: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(255, 107, 53, 0.3); }
+        .btn-primary { width: 100%; margin-bottom: 1rem; }
+        .error-message { background: rgba(220, 38, 38, 0.2); color: #fca5a5; padding: 0.875rem; border-radius: 10px; margin-top: 1rem; text-align: center; border: 1px solid rgba(220, 38, 38, 0.5); }
+        .success-message { background: rgba(16, 185, 129, 0.2); color: #86efac; padding: 0.875rem; border-radius: 10px; margin-top: 1rem; text-align: center; border: 1px solid rgba(16, 185, 129, 0.5); }
+        .main-app { display: none; }
+        .header { background: rgba(20, 20, 35, 0.9); padding: 1.5rem 2rem; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .header h1 { color: #ff6b35; font-size: 1.5rem; }
+        .logout-btn { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+        .logout-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); }
+        .nav-tabs { display: flex; background: rgba(20, 20, 35, 0.8); border-radius: 16px; padding: 0.5rem; margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); gap: 0.25rem; }
+        .nav-tab { flex: 1; padding: 0.875rem; background: none; border: none; border-radius: 12px; cursor: pointer; font-size: 1rem; font-weight: 500; transition: all 0.2s; color: #888; }
+        .nav-tab.active { background: linear-gradient(135deg, #ff6b35 0%, #dc2626 100%); color: white; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3); }
+        .tab-content { display: none; background: rgba(20, 20, 35, 0.8); border-radius: 16px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .tab-content.active { display: block; }
+        .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; margin-left: 0.5rem; font-weight: 500; transition: all 0.2s; }
+        .btn-danger:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3); }
+        .btn-edit { background: linear-gradient(135deg, #ff6b35 0%, #f97316 100%); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; margin-right: 0.5rem; font-weight: 500; transition: all 0.2s; }
+        .btn-edit:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-content { background: rgba(20, 20, 35, 0.95); margin: 2rem auto; padding: 2rem; border-radius: 16px; width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .modal-header h3 { color: #ff6b35; }
+        .close { font-size: 2rem; cursor: pointer; color: #888; transition: color 0.2s; }
+        .close:hover { color: #dc2626; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .calendar-container { margin-bottom: 2rem; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .calendar-header h2 { color: #ff6b35; font-size: 1.3rem; }
+        .calendar-nav { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; color: #ccc; font-weight: 500; margin: 0 0.25rem; transition: all 0.2s; }
+        .calendar-nav:hover { background: rgba(255, 255, 255, 0.1); border-color: #ff6b35; }
+        .appointments-list { background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 1.5rem; min-height: 200px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .appointment-card { background: rgba(30, 30, 50, 0.8); border: 1px solid rgba(255, 107, 53, 0.3); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; position: relative; transition: all 0.2s; }
+        .appointment-card:hover { border-color: #ff6b35; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2); background: rgba(30, 30, 50, 1); }
+        .appointment-time { font-weight: bold; color: #ff6b35; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .appointment-client { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; color: #fff; }
+        .appointment-details { color: #aaa; font-size: 0.95rem; line-height: 1.5; }
+        .appointment-details div { margin-bottom: 0.25rem; }
+        .appointment-details strong { color: #ff6b35; }
+        .appointment-actions { position: absolute; top: 1rem; right: 1rem; }
+        .loading { text-align: center; padding: 3rem; color: #888; font-size: 1.1rem; }
+        .empty-state { text-align: center; padding: 3rem; color: #666; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: linear-gradient(135deg, rgba(255, 107, 53, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%); border: 1px solid rgba(255, 107, 53, 0.3); color: #fff; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); }
+        .stat-value { font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem; color: #ff6b35; }
+        .stat-label { opacity: 0.8; font-size: 1.1rem; }
+        @media (max-width: 768px) { .form-row { grid-template-columns: 1fr; } .appointment-actions { position: static; margin-top: 1rem; } }
+    </style>
+</head>
+<body>
+    <div id="login-container" class="login-container">
+        <div class="login-form">
+            <h1>🚗 SVservice125</h1>
+            <div class="subtitle">Система управления автосервисом</div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Логин:</label>
+                    <input type="text" id="username" placeholder="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Войти в систему</button>
+                <div id="login-error" class="error-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-app" class="main-app">
+        <div class="container">
+            <div class="header">
+                <h1>🚗 SVservice125</h1>
+                <button id="logout-btn" class="logout-btn">Выйти</button>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('calendar')">📅 Календарь</button>
+                <button class="nav-tab" onclick="showTab('clients')">👥 Клиенты</button>
+                <button class="nav-tab" onclick="showTab('birthdays')">🎂 Дни рождения</button>
+                <button class="nav-tab" onclick="showTab('statistics')">📊 Статистика</button>
+            </div>
+
+            <div id="calendar-tab" class="tab-content active">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h2 id="current-date">Записи на сегодня</h2>
+                        <div>
+                            <button class="calendar-nav" onclick="changeDate(-1)">← Вчера</button>
+                            <button class="calendar-nav" onclick="changeDate(0)">Сегодня</button>
+                            <button class="calendar-nav" onclick="changeDate(1)">Завтра →</button>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="openModal('appointment-modal')">➕ Добавить запись</button>
+                    <div id="appointments-container" class="appointments-list"><div class="loading">⏳ Загрузка записей...</div></div>
+                </div>
+            </div>
+
+            <div id="clients-tab" class="tab-content">
+                <h2 style="color: #ff6b35; margin-bottom: 1rem;">👥 База клиентов</h2>
+                <div id="clients-container" class="loading">Загрузка клиентов...</div>
+            </div>
+
+            <div id="birthdays-tab" class="tab-content">
+                <h2 style="color: #ff6b35; margin-bottom: 1rem;">🎂 Дни рождения клиентов</h2>
+                <div id="birthdays-container" class="loading">Загрузка...</div>
+            </div>
+
+            <div id="statistics-tab" class="tab-content">
+                <h2 style="color: #ff6b35; margin-bottom: 1rem;">📊 Статистика доходов</h2>
+                <div class="form-row">
+                    <div><label>Дата с:</label><input type="date" id="stats-date-from"></div>
+                    <div><label>Дата по:</label><input type="date" id="stats-date-to"></div>
+                </div>
+                <button class="btn" onclick="loadStatistics()">📈 Показать статистику</button>
+                <button class="btn" onclick="exportToCSV()" style="margin-left: 0.5rem;">📋 Экспорт CSV</button>
+                <div id="statistics-container">
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-value" id="total-income">0 ₽</div><div class="stat-label">Общий доход</div></div>
+                        <div class="stat-card"><div class="stat-value" id="total-orders">0</div><div class="stat-label">Заказов</div></div>
+                        <div class="stat-card"><div class="stat-value" id="average-check">0 ₽</div><div class="stat-label">Средний чек</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="appointment-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">➕ Добавить запись</h3>
+                <span class="close" onclick="closeModal('appointment-modal')">&times;</span>
+            </div>
+            <form id="appointment-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-row full"><label><strong>Тип клиента:</strong></label><div><input type="radio" id="new-client" name="client-type" value="new" checked><label for="new-client">🆕 Новый клиент</label><input type="radio" id="existing-client" name="client-type" value="existing" style="margin-left: 20px;"><label for="existing-client">👤 Существующий клиент</label></div></div>
+                <div class="form-row full" id="client-search-row" style="display: none;"><label for="client-search">🔍 Поиск клиента:</label><input type="text" id="client-search" placeholder="Начните вводить имя..."><div id="client-suggestions"></div></div>
+                <div class="form-row"><div class="form-group"><label>👤 ФИО:</label><input type="text" id="client-fio" required></div><div class="form-group"><label>📱 Телефон:</label><input type="tel" id="client-phone" required></div></div>
+                <div class="form-row"><div class="form-group"><label>🎂 Дата рождения:</label><input type="date" id="client-birthdate"></div><div class="form-group"><label>🚗 Марка авто:</label><input type="text" id="car-brand"></div></div>
+                <div class="form-row"><div class="form-group"><label>🔢 Номер авто:</label><input type="text" id="car-number"></div><div class="form-group"><label>🛣️ Пробег:</label><input type="text" id="mileage"></div></div>
+                <div class="form-row full"><div class="form-group"><label>🏷️ VIN:</label><input type="text" id="vin"></div></div>
+                <div class="form-row full"><div class="form-group"><label>🔧 Описание работ:</label><textarea id="service-description" rows="3" placeholder="Опишите выполняемые работы..."></textarea></div></div>
+                <div class="form-row"><div class="form-group"><label>💰 Сумма заказа:</label><input type="number" id="order-sum" step="0.01" min="0"></div><div class="form-group"><label>📅 Дата визита:</label><input type="date" id="visit-date" required></div></div>
+                <div class="form-row"><div class="form-group"><label>⏰ Время начала:</label><input type="time" id="visit-time-start" required></div><div class="form-group"><label>⏱️ Время окончания:</label><input type="time" id="visit-time-end" required></div></div>
+                <div class="form-row full" style="margin-top: 1.5rem;"><button type="submit" class="btn btn-primary" style="width: 48%; display: inline-block;">💾 Сохранить</button><button type="button" class="btn" onclick="closeModal('appointment-modal')" style="width: 48%; display: inline-block; margin-left: 2%; background: rgba(255, 255, 255, 0.1);">❌ Отмена</button></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://qldvhnkrjsnwqnpmjdog.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsZHZobmtyanNud3FucG1qZG9nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE2MTE4NzAsImV4cCI6MjA3NzE4Nzg3MH0.cMPGxHx52AjCjeIkubAMgvsBQNPEdrexSvl4T4JRdXc';
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const USERS = [{ login: 'admin', password: 'admin123' }];
+        let currentDate = new Date();
+        let allClients = [];
+        let currentEditId = null;
+
+        async function getAllClients() {
+            const { data, error } = await supabaseClient.from('clients').select('*').order('created_at', { ascending: false });
+            return error ? [] : (data || []);
+        }
+
+        async function addClient(clientData) {
+            const dataToInsert = { fio: clientData.fio || null, phone: clientData.phone || null, birthdate: clientData.birthdate || null, car_brand: clientData.car_brand || null, car_number: clientData.car_number || null, mileage: clientData.mileage || null, vin: clientData.vin || null, service_description: clientData.service_description || null, order_sum: clientData.order_sum ? parseFloat(clientData.order_sum) : null, visit_date: clientData.visit_date || null, visit_time_start: clientData.visit_time_start || null, visit_time_end: clientData.visit_time_end || null };
+            const { data, error } = await supabaseClient.from('clients').insert([dataToInsert]).select();
+            if (error) throw error;
+            return data[0];
+        }
+
+        async function updateClient(id, updates) {
+            const dataToUpdate = {};
+            Object.keys(updates).forEach(key => { if (updates[key] !== undefined && updates[key] !== '') { dataToUpdate[key] = key === 'order_sum' ? parseFloat(updates[key]) || null : updates[key]; } });
+            const { data, error } = await supabaseClient.from('clients').update(dataToUpdate).eq('id', id).select();
+            if (error) throw error;
+            return data[0];
+        }
+
+        async function deleteClient(id) {
+            const { error } = await supabaseClient.from('clients').delete().eq('id', id);
+            if (error) throw error;
+            return true;
+        }
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = USERS.find(u => u.login === username && u.password === password);
+            if (user) { document.getElementById('login-container').style.display = 'none'; document.getElementById('main-app').style.display = 'block'; initializeApp(); }
+            else { showError('login-error', 'Неверный логин или пароль'); }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', function() { document.getElementById('login-container').style.display = 'flex'; document.getElementById('main-app').style.display = 'none'; document.getElementById('login-form').reset(); });
+
+        async function initializeApp() { updateDateDisplay(); await loadData(); }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+            if (tabName === 'clients') loadClients();
+            if (tabName === 'birthdays') loadBirthdays();
+            if (tabName === 'statistics') loadStatistics();
+        }
+
+        function openModal(modalId) { document.getElementById(modalId).style.display = 'block'; if (modalId === 'appointment-modal') { document.getElementById('visit-date').value = formatDate(currentDate); setupClientTypeHandlers(); } }
+
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; if (modalId === 'appointment-modal') { document.getElementById('appointment-form').reset(); currentEditId = null; document.getElementById('modal-title').textContent = '➕ Добавить запись'; } }
+
+        function changeDate(days) { currentDate.setDate(currentDate.getDate() + days); updateDateDisplay(); loadAppointments(); }
+
+        function updateDateDisplay() { const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }; document.getElementById('current-date').textContent = 'Записи на ' + currentDate.toLocaleDateString('ru-RU', options); }
+
+        function formatDate(date) { return date.toISOString().split('T')[0]; }
+
+        async function loadData() { showLoading('appointments-container', '⏳ Загрузка записей...'); await loadAllClients(); await loadAppointments(); }
+
+        async function loadAllClients() { try { allClients = await getAllClients(); } catch (error) { allClients = []; } }
+
+        async function loadAppointments() {
+            const dateStr = formatDate(currentDate);
+            const appointments = allClients.filter(client => client.visit_date === dateStr);
+            const container = document.getElementById('appointments-container');
+            if (appointments.length === 0) { container.innerHTML = '<div class="empty-state">📅 На эту дату записей нет</div>'; return; }
+            appointments.sort((a, b) => { if (!a.visit_time_start) return 1; if (!b.visit_time_start) return -1; return a.visit_time_start.localeCompare(b.visit_time_start); });
+            const appointmentsHtml = appointments.map(appointment => `<div class="appointment-card"><div class="appointment-time">🕐 ${appointment.visit_time_start || 'Не указано'} - ${appointment.visit_time_end || 'Не указано'}</div><div class="appointment-client">👤 ${appointment.fio || 'Имя не указано'}</div><div class="appointment-details"><div><strong>📱 Телефон:</strong> ${appointment.phone || 'Не указан'}</div><div><strong>🚗 Авто:</strong> ${appointment.car_brand || 'Не указано'} ${appointment.car_number || ''}</div>${appointment.service_description ? `<div><strong>🔧 Услуги:</strong> ${appointment.service_description}</div>` : ''}${appointment.order_sum ? `<div><strong>💰 Сумма:</strong> ${parseFloat(appointment.order_sum).toLocaleString('ru-RU')} ₽</div>` : ''}</div><div class="appointment-actions"><button class="btn-edit" onclick="editAppointment('${appointment.id}')">✏️ Редактировать</button><button class="btn-danger" onclick="deleteAppointment('${appointment.id}')">🗑️ Удалить</button></div></div>`).join('');
+            container.innerHTML = appointmentsHtml;
+        }
+
+        document.getElementById('appointment-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = { fio: document.getElementById('client-fio').value, phone: document.getElementById('client-phone').value, birthdate: document.getElementById('client-birthdate').value, car_brand: document.getElementById('car-brand').value, car_number: document.getElementById('car-number').value, mileage: document.getElementById('mileage').value, vin: document.getElementById('vin').value, service_description: document.getElementById('service-description').value, order_sum: document.getElementById('order-sum').value, visit_date: document.getElementById('visit-date').value, visit_time_start: document.getElementById('visit-time-start').value, visit_time_end: document.getElementById('visit-time-end').value };
+            try {
+                if (currentEditId) { await updateClient(currentEditId, formData); alert('✅ Запись обновлена!'); }
+                else { await addClient(formData); alert('✅ Запись добавлена!'); }
+                closeModal('appointment-modal');
+                await loadAllClients();
+                await loadAppointments();
+            } catch (error) { alert('❌ Ошибка: ' + error.message); }
+        });
+
+        function editAppointment(id) {
+            const appointment = allClients.find(client => client.id === id);
+            if (!appointment) return;
+            currentEditId = id;
+            document.getElementById('modal-title').textContent = '✏️ Редактировать запись';
+            document.getElementById('client-fio').value = appointment.fio || '';
+            document.getElementById('client-phone').value = appointment.phone || '';
+            document.getElementById('client-birthdate').value = appointment.birthdate || '';
+            document.getElementById('car-brand').value = appointment.car_brand || '';
+            document.getElementById('car-number').value = appointment.car_number || '';
+            document.getElementById('mileage').value = appointment.mileage || '';
+            document.getElementById('vin').value = appointment.vin || '';
+            document.getElementById('service-description').value = appointment.service_description || '';
+            document.getElementById('order-sum').value = appointment.order_sum || '';
+            document.getElementById('visit-date').value = appointment.visit_date || '';
+            document.getElementById('visit-time-start').value = appointment.visit_time_start || '';
+            document.getElementById('visit-time-end').value = appointment.visit_time_end || '';
+            openModal('appointment-modal');
+        }
+
+        async function deleteAppointment(id) {
+            if (!confirm('🗑️ Удалить эту запись?')) return;
+            try { await deleteClient(id); alert('✅ Запись удалена!'); await loadAllClients(); await loadAppointments(); }
+            catch (error) { alert('❌ Ошибка: ' + error.message); }
+        }
+
+        function loadClients() {
+            const container = document.getElementById('clients-container');
+            if (allClients.length === 0) { container.innerHTML = '<div class="empty-state">👥 Клиентов пока нет</div>'; return; }
+            const uniqueClients = {};
+            allClients.forEach(client => {
+                const phone = client.phone || 'Нет телефона';
+                if (!uniqueClients[phone]) { uniqueClients[phone] = { ...client, visits: 1, totalSum: parseFloat(client.order_sum) || 0 }; }
+                else { uniqueClients[phone].visits++; uniqueClients[phone].totalSum += parseFloat(client.order_sum) || 0; }
+            });
+            const clientsHtml = Object.values(uniqueClients).map(client => `<div class="appointment-card"><div class="appointment-client">👤 ${client.fio || 'Имя не указано'}</div><div class="appointment-details"><div><strong>📱 Телефон:</strong> ${client.phone || 'Не указан'}</div><div><strong>🚗 Авто:</strong> ${client.car_brand || 'Не указано'} ${client.car_number || ''}</div><div><strong>📊 Визитов:</strong> ${client.visits}</div><div><strong>💰 Общая сумма:</strong> ${client.totalSum.toLocaleString('ru-RU')} ₽</div></div><div class="appointment-actions"><button class="btn-edit" onclick="editAppointment('${client.id}')">✏️ Редактировать</button><button class="btn-danger" onclick="deleteAppointment('${client.id}')">🗑️ Удалить</button></div></div>`).join('');
+            container.innerHTML = clientsHtml;
+        }
+
+        function loadBirthdays() {
+            const container = document.getElementById('birthdays-container');
+            const clientsWithBirthdays = allClients.filter(client => client.birthdate);
+            if (clientsWithBirthdays.length === 0) { container.innerHTML = '<div class="empty-state">🎂 Дни рождения не указаны</div>'; return; }
+            const today = new Date();
+            const birthdaysHtml = clientsWithBirthdays.map(client => {
+                const birthdate = new Date(client.birthdate);
+                const thisYear = new Date(today.getFullYear(), birthdate.getMonth(), birthdate.getDate());
+                let daysUntil = Math.ceil((thisYear - today) / (1000 * 60 * 60 * 24));
+                if (daysUntil < 0) { thisYear.setFullYear(today.getFullYear() + 1); daysUntil = Math.ceil((thisYear - today) / (1000 * 60 * 60 * 24)); }
+                return { daysUntil, html: `<div class="appointment-card"><div class="appointment-client">👤 ${client.fio || 'Имя не указано'}</div><div class="appointment-details"><div><strong>📱 Телефон:</strong> ${client.phone || 'Не указан'}</div><div><strong>🎂 День рождения:</strong> ${client.birthdate}</div><div><strong>⏰ Осталось дней:</strong> ${daysUntil === 0 ? '🎉 Сегодня!' : daysUntil}</div></div></div>` };
+            }).sort((a, b) => a.daysUntil - b.daysUntil);
+            container.innerHTML = birthdaysHtml.map(item => item.html).join('');
+        }
+
+        function loadStatistics() {
+            const dateFrom = document.getElementById('stats-date-from').value;
+            const dateTo = document.getElementById('stats-date-to').value;
+            let filteredClients = allClients.filter(client => client.order_sum && parseFloat(client.order_sum) > 0);
+            if (dateFrom || dateTo) { filteredClients = filteredClients.filter(client => { const visitDate = client.visit_date; if (dateFrom && visitDate < dateFrom) return false; if (dateTo && visitDate > dateTo) return false; return true; }); }
+            const totalIncome = filteredClients.reduce((sum, client) => sum + (parseFloat(client.order_sum) || 0), 0);
+            const totalOrders = filteredClients.length;
+            const averageCheck = totalOrders > 0 ? (totalIncome / totalOrders) : 0;
+            document.getElementById('total-income').textContent = totalIncome.toLocaleString('ru-RU') + ' ₽';
+            document.getElementById('total-orders').textContent = totalOrders;
+            document.getElementById('average-check').textContent = Math.round(averageCheck).toLocaleString('ru-RU') + ' ₽';
+        }
+
+        function exportToCSV() {
+            if (allClients.length === 0) { alert('📊 Нет данных для экспорта'); return; }
+            const headers = ['ID', 'ФИО', 'Телефон', 'День рождения', 'Марка авто', 'Номер авто', 'Пробег', 'VIN', 'Описание работ', 'Сумма заказа', 'Дата визита', 'Время начала', 'Время окончания', 'Создано'];
+            const csvContent = [headers.join(','), ...allClients.map(client => [client.id, `"${client.fio || ''}"`, `"${client.phone || ''}"`, client.birthdate || '', `"${client.car_brand || ''}"`, `"${client.car_number || ''}"`, `"${client.mileage || ''}"`, `"${client.vin || ''}"`, `"${client.service_description || ''}"`, client.order_sum || '', client.visit_date || '', client.visit_time_start || '', client.visit_time_end || '', client.created_at || ''].join(','))].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `svservice_export_${formatDate(new Date())}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function setupClientTypeHandlers() {
+            const newClientRadio = document.getElementById('new-client');
+            const existingClientRadio = document.getElementById('existing-client');
+            const clientSearchRow = document.getElementById('client-search-row');
+            function handleClientTypeChange() { if (existingClientRadio.checked) { clientSearchRow.style.display = 'block'; setupClientSearch(); } else { clientSearchRow.style.display = 'none'; } }
+            newClientRadio.addEventListener('change', handleClientTypeChange);
+            existingClientRadio.addEventListener('change', handleClientTypeChange);
+        }
+
+        function setupClientSearch() {
+            const clientSearch = document.getElementById('client-search');
+            const suggestions = document.getElementById('client-suggestions');
+            clientSearch.addEventListener('input', function() {
+                const searchValue = this.value.toLowerCase();
+                if (searchValue.length < 2) { suggestions.style.display = 'none'; return; }
+                const matches = allClients.filter(client => (client.fio && client.fio.toLowerCase().includes(searchValue)) || (client.phone && client.phone.includes(searchValue)));
+                if (matches.length === 0) { suggestions.style.display = 'none'; return; }
+                const uniqueMatches = {};
+                matches.forEach(client => { const key = client.phone || client.fio; if (!uniqueMatches[key]) { uniqueMatches[key] = client; } });
+                const suggestionsHtml = Object.values(uniqueMatches).map(client => `<div class="appointment-card" style="padding: 0.5rem; margin-bottom: 0.25rem; cursor: pointer;" onclick="selectClient('${client.id}')"><strong>${client.fio || 'Нет имени'}</strong><br><small>${client.phone || 'Нет телефона'}</small></div>`).join('');
+                suggestions.innerHTML = suggestionsHtml;
+                suggestions.style.display = 'block';
+            });
+        }
+
+        function selectClient(id) {
+            const client = allClients.find(c => c.id === id);
+            if (!client) return;
+            document.getElementById('client-fio').value = client.fio || '';
+            document.getElementById('client-phone').value = client.phone || '';
+            document.getElementById('client-birthdate').value = client.birthdate || '';
+            document.getElementById('car-brand').value = client.car_brand || '';
+            document.getElementById('car-number').value = client.car_number || '';
+            document.getElementById('client-search').value = client.fio || client.phone || '';
+            document.getElementById('client-suggestions').style.display = 'none';
+        }
+
+        function showLoading(containerId, message) { document.getElementById(containerId).innerHTML = `<div class="loading">${message}</div>`; }
+
+        function showError(containerId, message) {
+            const errorEl = document.getElementById(containerId);
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+            document.getElementById('stats-date-from').value = formatDate(firstDay);
+            document.getElementById('stats-date-to').value = formatDate(today);
+        });
+
+        window.addEventListener('click', function(e) { const modals = document.querySelectorAll('.modal'); modals.forEach(modal => { if (e.target === modal) modal.style.display = 'none'; }); });
+
+        document.getElementById('visit-time-start').addEventListener('change', function() {
+            const startTime = this.value;
+            if (startTime) {
+                const [hours, minutes] = startTime.split(':');
+                const endTime = new Date();
+                endTime.setHours(parseInt(hours) + 1, parseInt(minutes));
+                const endTimeStr = endTime.getHours().toString().padStart(2, '0') + ':' + endTime.getMinutes().toString().padStart(2, '0');
+                document.getElementById('visit-time-end').value = endTimeStr;
+            }
+        });
+    </script>
+</body>
+</html>
